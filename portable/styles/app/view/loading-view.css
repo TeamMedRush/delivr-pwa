@@ -1,0 +1,42 @@
+.loading-view-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  padding: 1rem;
+  gap: 1rem;
+}
+
+.loading-view-icon {
+  font-size: 6rem !important;
+  stroke-width: 2;
+}
+
+.loading-view-content {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+}
+
+.loading-view-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.5rem;
+}
+
+.loading-view-text {
+  font-size: 2rem !important;
+  line-height: 1 !important;
+  background: var(--color-focus);
+  color: var(--color-white);
+  padding: 0.5rem 0.75rem;
+  border-radius: 0.75rem;
+}
+

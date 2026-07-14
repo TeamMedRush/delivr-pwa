@@ -1,0 +1,14 @@
+.search-bar {
+  position: sticky;
+  padding: 0 1rem;
+  z-index: 999;
+  top: 4.76rem;
+  width: 100%;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search-bar-input {
+  flex: 1;
+}
+

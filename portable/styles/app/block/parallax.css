@@ -1,0 +1,39 @@
+@keyframes parallax {
+  0% {
+    transform: translateY(0);
+  }
+
+  100% {
+    transform: translateY(-100vh);
+  }
+}
+
+.parallax {
+  --overlay: linear-gradient(
+    to right,
+    transparent 0%,
+    color(
+      from var(--color-shine) xyz x y z / 0.5
+    ) 10%,
+    color(
+      from var(--color-shine) xyz x y z / 0.5
+    ) 90%,
+    transparent 100%
+  );
+  position: fixed !important;
+  display: block;
+  width: 100%;
+  height: 200vh;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  animation: parallax linear;
+  animation-timeline: scroll();
+  opacity: 0.03125;
+  background-image: var(--overlay), var(--img-l-src);
+}
+
+.dark .parallax {
+  background-image: var(--overlay), var(--img-d-src);
+}
+

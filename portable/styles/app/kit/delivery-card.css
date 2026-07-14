@@ -1,0 +1,44 @@
+.delivery-card {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 0.125rem solid var(--color-focus);
+  border-radius: 1rem;
+  align-items: center;
+}
+
+.delivery-card-status {
+  aspect-ratio: 1 / 1;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  background-color: var(--color-focus);
+  color: var(--color-white);
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-self: stretch;
+}
+
+.delivery-card-status-icon {
+  stroke-width: 2;
+  font-size: 1.5rem;
+}
+
+.delivery-card-content {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  padding: 0.5rem;
+}
+
+.delivery-card-name {
+  font-size: 1.25rem !important;
+  font-weight: 600;
+}
+
+.delivery-card-actions {
+  display: flex;
+  aligns: center;
+}
+
