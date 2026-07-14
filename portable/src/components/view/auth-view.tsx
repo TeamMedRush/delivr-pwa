@@ -24,7 +24,10 @@ export function AuthView({
 
   const handleLogin = useCallback(async () => {
     setLoading(true);
-    const { data } = await authenticateUser(phoneNumber, password);
+
+    const { data }: {
+      data: any;
+    } = await authenticateUser(phoneNumber, password);
 
     if (data.success) {
       localStorage.setItem("apiToken", data.access_token);
@@ -38,7 +41,10 @@ export function AuthView({
 
   const handleSignUp = useCallback(async () => {
     setLoading(true);
-    const { data } = await createAccount(username, phoneNumber, password);
+
+    const { data }: {
+      data: any;
+    } = await createAccount(phoneNumber, username, password);
 
     if (!data.success) {
       alert("Account creation failed. Please check your details and try again.");
