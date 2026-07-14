@@ -17,10 +17,6 @@ function Layout({
   dynamic = "",
   children
 }: LayoutProps) {
-  if (localStorage.getItem("apiToken") === null) {
-    window.location.href = "/auth";
-  }
-
   let path = "";
 
   if (dynamic)

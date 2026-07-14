@@ -9,6 +9,10 @@ import { useClasses } from "@styles";
 export function HomeView() {
   const { latest } = useDelivery();
 
+  if (localStorage.getItem("apiToken") === null) {
+    window.location.href = "/auth";
+  }
+
   return (<>
     <Container className={useClasses('home-view')}>
       <Container
