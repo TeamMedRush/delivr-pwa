@@ -60,17 +60,25 @@ export class ApiCaller {
       mode: "cors" | "no-cors" | "same-origin";
       credentials: "omit" | "same-origin" | "include";
     }> = {},
-    retries: number | null = null,
+    config: {
+      proxied?: boolean;
+      lsCached?: boolean;
+      lsCacheTTL?: number | null;
+      retries?: number | null;
+    } = {}
   ): Promise<unknown> {
     const keyStatic = `${this.baseApiUrl}:${endpoint}`
     const keyDynamic = `${method}:${body}`;
     const lsCacheKey = `apiCache::${keyStatic}:${keyDynamic}`;
     const lsCachedData = localStorage.getItem(lsCacheKey);
+    let lsCached = config.lsCached || this.lsCached;
+    let lsCacheTTL = config.lsCacheTTL || this.lsCacheTTL;
+    let proxied = config.proxied || this.proxied;
 
     if (lsCachedData) {
       const { timestamp, data } = JSON.parse(lsCachedData);
-      const alive = this.lsCacheTTL
-        ? (Date.now() - timestamp < this.lsCacheTTL)
+      const alive = lsCacheTTL
+        ? (Date.now() - timestamp < lsCacheTTL)
         : true;
 
       if (!alive) {
@@ -94,7 +102,7 @@ export class ApiCaller {
 
     let response: Response;
 
-    if (!this.proxied) {
+    if (!proxied) {
       response = await fetch(finalUrl, finalHeaders);
     } else {
       response = await fetch(PROXY_URL, {
@@ -110,9 +118,9 @@ export class ApiCaller {
     }
 
     if (!response.ok) {
-      retries = retries;
+      let retries = config.retries || 0;
 
-      if (retries === null) {
+      if (retries === null || retries === undefined) {
         retries = this.retries;
       }
 
@@ -126,14 +134,17 @@ export class ApiCaller {
           method,
           body,
           extraOptions,
-          retries - 1
+          {
+            ...config,
+            retries: retries - 1
+          }
         );
       }
     }
 
     const responseData = await response.json();
 
-    if (this.lsCached) {
+    if (lsCached) {
       localStorage.setItem(lsCacheKey, JSON.stringify({
         timestamp: Date.now(),
         data: responseData,

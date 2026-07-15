@@ -7,6 +7,7 @@ import { LinkButton } from "@components/ui/interactive/link-button";
 import { Container } from "@components/ui/structure/container";
 import { Heading } from "@components/ui/text/heading";
 import { LoadingView } from "@components/view/loading-view";
+import { useUser } from "@contexts/user";
 import { useClasses } from "@styles";
 
 interface AuthViewProps {
@@ -16,6 +17,7 @@ interface AuthViewProps {
 export function AuthView({
   mode = "unknown",
 }: AuthViewProps) {
+  const { ready, authenticated } = useUser();
   const [loading, setLoading] = useState(false);
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -99,8 +101,12 @@ export function AuthView({
     ],
   };
 
-  if (loading) {
+  if (!ready || loading) {
     return <LoadingView />;
+  }
+
+  if (ready && authenticated) {
+    window.location.href = "/profile";
   }
 
   return (

@@ -5,10 +5,12 @@ import { Top } from "@components/ui/structure/top";
 import { HomeView } from "@components/view/home-view";
 import { ErrorView } from "@components/view/not-found-view";
 import { DeliveryProvider } from "@contexts/delivery";
+import { UserProvider } from "@contexts/user";
 import { AuthPage } from "@routes/auth";
 import { DeliveryPage } from "@routes/delivery";
 import { HistoryPage } from "@routes/history";
 import { NewDeliveryPage } from "@routes/new-delivery";
+import { ProfilePage } from "@routes/profile";
 import { useForwarded } from "@utils/path";
 import { type LayoutProps, useRouter } from "@utils/router";
 
@@ -26,27 +28,30 @@ function Layout({
     path += `/${forwarded?.join('/')}`;
 
   return (<>
-    <Container attributes={{ id: "main" }}>
-      <ContentFrame>
-        <Top />
-        <Navbar path={path} />
+    <UserProvider>
+      <Container attributes={{ id: "main" }}>
+        <ContentFrame>
+          <Top />
+          <Navbar path={path} />
 
-        {!!children ? children : (
-          !dynamic
-            ? <DeliveryProvider><HomeView /></DeliveryProvider>
-            : <ErrorView
-              code={404}
-              message={`Can't reach: ${path}`}
-            />
-        )}
-      </ContentFrame>
-    </Container>
+          {!!children ? children : (
+            !dynamic
+              ? <DeliveryProvider><HomeView /></DeliveryProvider>
+              : <ErrorView
+                code={404}
+                message={`Can't reach: ${path}`}
+              />
+          )}
+        </ContentFrame>
+      </Container>
+    </UserProvider>
   </>);
 }
 
 export function IndexPage() {
   return useRouter(useForwarded(), Layout, {
     "auth": AuthPage,
+    "profile": ProfilePage,
     "delivery": DeliveryPage,
     "history": HistoryPage,
     "new-delivery": NewDeliveryPage,

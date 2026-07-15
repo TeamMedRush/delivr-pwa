@@ -8,8 +8,7 @@ interface BackButtonProps {
 
 export function BackButton({ path = "/" }: BackButtonProps) {
   const goToPrevPage = useCallback(() => {
-    if (!(["", "/"].includes(path)))
-    window.history.back();
+    window.location.href = "..";
   }, []);
 
   return (<>
