@@ -1,5 +1,3 @@
-import { useState } from "preact/hooks";
-
 import { User } from "@attaditya/iconoir-preact";
 import { Button } from "@components/ui/interactive/button";
 import { Container } from "@components/ui/structure/container";

@@ -1,11 +1,15 @@
 import { Delivery } from "@interfaces/delivery";
 
-interface RawData {
-  data: any;
+interface DeliveryListRawData {
+  data: Delivery[];
+}
+
+interface DeliveryDetailsRawData {
+  data: Delivery;
 }
 
 export function transformDeliveryList(raw: unknown): Delivery[] {
-  const data = (raw as RawData).data;
+  const data = (raw as DeliveryListRawData).data;
 
   data.sort((a: Delivery, b: Delivery) => {
     if (a.requested_at === null) return 1;
@@ -14,5 +18,11 @@ export function transformDeliveryList(raw: unknown): Delivery[] {
   });
 
   return data;
+}
+
+export function transformDeliveryDetails(raw: unknown): Delivery | null {
+  const data = (raw as DeliveryDetailsRawData).data;
+
+  return data || null;
 }
 

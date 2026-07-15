@@ -36,7 +36,7 @@ export function DeliveryView({
     await startDelivery(
       delivery.ride_uuid,
       "Unknown Location",
-      `${latitude.toFixed(5)},${longitude.toFixed(5)}`
+      `${latitude},${longitude}`
     );
 
     window.location.reload();
@@ -49,7 +49,7 @@ export function DeliveryView({
     await endDelivery(
       delivery.ride_uuid,
       "Unknown Location",
-      `${latitude.toFixed(5)},${longitude.toFixed(5)}`
+      `${latitude},${longitude}`
     );
 
     window.location.reload();
