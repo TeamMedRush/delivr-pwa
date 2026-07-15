@@ -10,7 +10,7 @@ import { useUser } from "@contexts/user";
 import { useClasses } from "@styles";
 
 export function ProfileView() {
-  const { ready, authenticated, user } = useUser();
+  const { ready, authenticated, user, logout } = useUser();
 
   if (!ready) {
     return <LoadingView />;
@@ -64,6 +64,7 @@ export function ProfileView() {
           <Button
             title="Log Out"
             icon="LogOutRegular"
+            onClick={logout}
           />
         </Container>
       </Container>

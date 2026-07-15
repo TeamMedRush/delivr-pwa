@@ -27,6 +27,8 @@ interface UserMeta {
     phoneNumber: string,
     password: string,
   ) => Promise<void>;
+
+  logout: () => void;
 }
 
 interface ProviderProps {
@@ -89,6 +91,12 @@ export function UserProvider({ children }: ProviderProps) {
     setAuthenticating(false);
   }, []);
 
+  const logout = useCallback(() => {
+    localStorage.removeItem("apiToken");
+    setAuthenticated(false);
+    setUser(null);
+  }, []);
+
   const load = useCallback(async () => {
     try {
       const data = transformUser(
@@ -115,6 +123,7 @@ export function UserProvider({ children }: ProviderProps) {
     user,
     register,
     login,
+    logout,
   };
 
   return <UserContext.Provider value={value}>
