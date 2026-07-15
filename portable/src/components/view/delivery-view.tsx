@@ -30,8 +30,8 @@ export function DeliveryView({
   )[0];
 
   const start = async () => {
-    const { latitude, longitude } = await getCurrentLocation();
     setLoading(true);
+    const { latitude, longitude } = await getCurrentLocation();
 
     await startDelivery(
       delivery.ride_uuid,
@@ -43,8 +43,8 @@ export function DeliveryView({
   }
 
   const complete = async () => {
-    const { latitude, longitude } = await getCurrentLocation();
     setLoading(true);
+    const { latitude, longitude } = await getCurrentLocation();
 
     await endDelivery(
       delivery.ride_uuid,
