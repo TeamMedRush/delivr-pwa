@@ -25,3 +25,9 @@
   flex-direction: column;
 }
 
+@media (max-width: 500px) {
+  .content-frame {
+    max-width: 100%;
+  }
+}
+
