@@ -29,7 +29,7 @@ function transformDelivery(raw: RawDelivery): Delivery {
     rideStatus: raw.ride_status,
     requestedAt: raw.requested_at,
     startLocation: raw.start_location,
-    startCoordinates: null,
+    startCoordinates: raw.start_coordinates,
     pickedUpAt: raw.picked_up_at,
     endLocation: raw.end_location,
     endCoordinates: raw.end_coordinates,
