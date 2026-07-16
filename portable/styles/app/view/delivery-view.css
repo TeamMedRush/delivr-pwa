@@ -76,16 +76,34 @@
 }
 
 .delivery-view-trip-icon {
-  font-size: 1.25rem;
+  font-size: 1.5rem;
   stroke-width: 2;
   display: flex;
+  justify-content: center;
   align-items: center;
+  align-self: stretch;
+  aspect-ratio: 1 / 1;
+  border-radius: 0.5rem;
+  background-color: color(
+    from var(--color-focus) xyz x y z / 0.3
+  );
 }
 
 .delivery-view-trip-text {
   font-size: 1.25rem;
   display: flex;
-  align-items: center;
+  flex-direction: column;
+  font-weight: 900;
+}
+
+.delivery-view-trip-coords {
+  display: flex;
+  flex-direction: column;
+  font-weight: 200;
+}
+
+.delivery-view-trip-coords > * {
+  font-size: 0.875rem !important;
 }
 
 .delivery-view-actions {

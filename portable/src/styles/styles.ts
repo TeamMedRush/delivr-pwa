@@ -46,6 +46,7 @@ const classNames = {
   'delivery-view-status-container': 'delivery-view-status-container',
   'delivery-view-subheading': 'delivery-view-subheading',
   'delivery-view-trip': 'delivery-view-trip',
+  'delivery-view-trip-coords': 'delivery-view-trip-coords',
   'delivery-view-trip-icon': 'delivery-view-trip-icon',
   'delivery-view-trip-text': 'delivery-view-trip-text',
   'delivery-view-trips': 'delivery-view-trips',
@@ -139,6 +140,7 @@ export type PossibleClassName = ClassName | false | null | undefined;
 export function useClasses(...args: PossibleClassName[]): string {
   const validClass = (arg: PossibleClassName) => !!(arg && arg in classNames);
   const validClasses = args.filter(validClass) as ClassName[];
+
   return validClasses.map(arg => classNames[arg]).join(' ');
 }
 

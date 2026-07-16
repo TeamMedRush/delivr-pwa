@@ -149,10 +149,23 @@ export function DeliveryView({
 
               <Container className={useClasses("delivery-view-trip-text")}>
                 <Text>
-                  {location.friendlyName || "Unknown Location"} ({
-                    location.coords || "No coordinates"
-                  })
+                  {location.friendlyName || "Unknown Location"}
                 </Text>
+
+                {!location.coords
+                  ? "(No coordinates)"
+                  : <Container
+                    className={useClasses("delivery-view-trip-coords")}
+                  >
+                    <Text>
+                      Lat: {location.coords.split(",")[0]}
+                    </Text>
+
+                    <Text>
+                      Lng: {location.coords.split(",")[1]}
+                    </Text>
+                  </Container>
+                }
               </Container>
             </Container>))}
           </Container>
