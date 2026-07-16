@@ -13,7 +13,6 @@ export function useClasses(...args) {
 }
 
 `;
-
 const tsObjectFileTemplate = `// AUTO GENERATED FILE - DO NOT EDIT
 
 const classNames = {
@@ -22,7 +21,6 @@ const classNames = {
 
 export type ClassName = (keyof typeof classNames);
 export type PossibleClassName = ClassName | false | null | undefined;
-
 export function useClasses(...args: PossibleClassName[]): string {
   const validClass = (arg: PossibleClassName) => !!(arg && arg in classNames);
   const validClasses = args.filter(validClass) as ClassName[];
@@ -136,10 +134,11 @@ export async function matchComponentsCssFiles(componentsDir, cssDir) {
 
     const dir = component.split('/');
     const name = dir.pop().split('.')[0];
-    
     let indexRef = indexing;
+
     while (dir.length) {
       const parentDir = dir.shift();
+
       if (!indexRef[parentDir])
         indexRef[parentDir] = {};
 

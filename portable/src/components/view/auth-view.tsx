@@ -17,46 +17,18 @@ interface AuthViewProps {
 export function AuthView({
   mode = "unknown",
 }: AuthViewProps) {
-  const { ready, authenticated } = useUser();
-  const [loading, setLoading] = useState(false);
+  const {
+    ready,
+    authenticated,
+    authenticating,
+    login,
+    register,
+  } = useUser();
+
   const [username, setUsername] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-
-  const handleLogin = useCallback(async () => {
-    setLoading(true);
-
-    const { data }: {
-      data: any;
-    } = await authenticateUser(phoneNumber, password);
-
-    if (data.success) {
-      localStorage.setItem("apiToken", data.access_token);
-      window.location.href = "/";
-    } else {
-      alert("Login failed. Please check your credentials and try again.");
-    }
-
-    setLoading(false);
-  }, [phoneNumber, password]);
-
-  const handleSignUp = useCallback(async () => {
-    setLoading(true);
-
-    const { data }: {
-      data: any;
-    } = await createAccount(phoneNumber, username, password);
-
-    if (!data.success) {
-      alert("Account creation failed. Please check your details and try again.");
-      setLoading(false);
-      return;
-    }
-
-    await handleLogin();
-    setLoading(false);
-  }, [username, phoneNumber, password, confirmPassword]);
 
   const fields: {
     [key: string]: {
@@ -101,7 +73,7 @@ export function AuthView({
     ],
   };
 
-  if (!ready || loading) {
+  if (!ready || authenticating) {
     return <LoadingView />;
   }
 
@@ -123,7 +95,7 @@ export function AuthView({
         <Container className={useClasses("auth-options")}>
           {(mode === "in") && (
             <Button
-              onClick={handleLogin}
+              onClick={() => login(phoneNumber, password)}
               hoverText="Sign in to your account"
               title="Login"
               icon="PineTreeRegular"
@@ -133,7 +105,7 @@ export function AuthView({
 
           {(mode === "up") && (
             <Button
-              onClick={handleSignUp}
+              onClick={() => register(phoneNumber, username, password)}
               hoverText="Create a new account"
               title="Create Account"
               icon="FlowerRegular"

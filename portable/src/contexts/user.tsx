@@ -92,7 +92,7 @@ export function UserProvider({ children }: ProviderProps) {
   }, []);
 
   const logout = useCallback(() => {
-    localStorage.removeItem("apiToken");
+    localStorage.clear();
     setAuthenticated(false);
     setUser(null);
   }, []);
