@@ -8,7 +8,7 @@ export async function fetchDeliveryHistory() {
 
 export async function fetchDeliveryDetails(ride_uuid: string) {
   const data = await backendApi.callApi(
-    `/deliveries/${ride_uuid}/`,
+    `/deliveries/${ride_uuid}`,
     "GET"
   );
 
