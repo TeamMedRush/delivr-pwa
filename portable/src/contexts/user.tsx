@@ -59,6 +59,7 @@ export function UserProvider({ children }: ProviderProps) {
       }
 
       localStorage.setItem("apiToken", data.accessToken);
+      setAuthenticated(true);
     } catch (error) {
       alert("Login failed. Please check your credentials and try again.");
       return;
