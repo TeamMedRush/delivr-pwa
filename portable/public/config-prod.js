@@ -1,4 +1,4 @@
-window.apiBaseUrl = "https://delivr-be.onrender.com";
+window.apiBaseUrl = "https://delivr-be.attaditya.space";
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) {
