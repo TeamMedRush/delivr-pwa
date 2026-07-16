@@ -111,6 +111,7 @@ const classNames = {
   'new-delivery-view-header-icon': 'new-delivery-view-header-icon',
   'new-delivery-view-loading': 'new-delivery-view-loading',
   'new-delivery-view-loading-spinner': 'new-delivery-view-loading-spinner',
+  'new-delivery-view-title': 'new-delivery-view-title',
   'no-scrollpop': 'no-scrollpop',
   'node-bg': 'node-bg',
   'node-bg-node': 'node-bg-node',

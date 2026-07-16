@@ -42,8 +42,11 @@ export function NewDeliveryView() {
           <PlusCircle />
         </Container>
 
-        <Heading size="max">
-          New Ride
+        <Heading
+          size="large"
+          className={useClasses("new-delivery-view-title")}
+        >
+          New Delivery
         </Heading>
       </Container>
 
@@ -52,7 +55,7 @@ export function NewDeliveryView() {
           <Form
             fields={[
               {
-                label: "Invoice Number",
+                label: "Order Reference Number",
                 type: "text",
                 updateValue: setInvoiceNumber,
               }
