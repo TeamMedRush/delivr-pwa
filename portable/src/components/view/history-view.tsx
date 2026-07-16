@@ -26,7 +26,7 @@ export function HistoryView() {
         </Container>}
 
         {ready && !!history?.length && history.map(delivery => <DeliveryCard
-          key={delivery.ride_uuid}
+          key={delivery.rideUuid}
           delivery={delivery}
         />)}
       </Container>

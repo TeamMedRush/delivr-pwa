@@ -25,7 +25,7 @@ export function HomeView() {
 
       <Container className={useClasses("home-view-content")}>
         {latest && <DeliveryView
-          rider_uuid={latest.ride_uuid}
+          rider_uuid={latest.rideUuid}
           embedded
         />}
 

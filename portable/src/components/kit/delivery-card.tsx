@@ -14,7 +14,7 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
     <Container className={useClasses("delivery-card")}>
       <Container className={useClasses("delivery-card-status")}>
         <StatusIcon
-          status={delivery.ride_status || "pending"}
+          status={delivery.rideStatus || "pending"}
           className={useClasses("delivery-card-status-icon")}
         />
       </Container>
@@ -24,8 +24,8 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
           size="small"
           className={useClasses("delivery-card-name")}
         >
-          {!!delivery.requested_at && new Date(
-            delivery.requested_at * 1000
+          {!!delivery.requestedAt && new Date(
+            delivery.requestedAt * 1000
           ).toLocaleString("en-US", {
             weekday: "long",
             year: "numeric",
@@ -35,14 +35,14 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
             minute: "numeric",
           })}
 
-          {!delivery.requested_at && "Delivery"}
+          {!delivery.requestedAt && "Delivery"}
         </Heading>
       </Container>
 
       <Container className={useClasses("delivery-card-actions")}>
         <LinkButton
           icon="ArrowRightRegular"
-          url={`/delivery/${delivery.ride_uuid}`}
+          url={`/delivery/${delivery.rideUuid}`}
           urlText=""
           title=""
           newTab={false}

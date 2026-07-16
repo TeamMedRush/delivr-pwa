@@ -1,4 +1,4 @@
-import { useState } from "preact/hooks";
+import { useEffect, useState } from "preact/hooks";
 
 import { cancelDelivery, endDelivery, startDelivery } from "@api/delivery-actions";
 import { MapPin } from "@attaditya/iconoir-preact";
@@ -11,6 +11,7 @@ import { Text } from "@components/ui/text/text";
 import { LoadingView } from "@components/view/loading-view";
 import { ErrorView } from "@components/view/not-found-view";
 import { useDelivery } from "@contexts/delivery";
+import { Delivery } from "@interfaces/delivery";
 import { useClasses } from "@styles";
 import { getCurrentLocation, mapUrl } from "@utils/location";
 
@@ -22,69 +23,49 @@ interface DeliveryViewProps {
 export function DeliveryView({
   rider_uuid, embedded = false
 }: DeliveryViewProps) {
-  const { ready, history } = useDelivery();
-  const [loading, setLoading] = useState<boolean>(false);
+  const {
+    ready,
+    getDeliveryDetails,
+    start,
+    end,
+    cancel,
+  } = useDelivery();
 
-  const delivery = history.filter(
-    (item) => item.ride_uuid === rider_uuid
-  )[0];
+  const [loading, setLoading] = useState(true);
+  const [delivery, setDelivery] = useState<Delivery | null>(null);
 
-  const start = async () => {
-    setLoading(true);
-    const { latitude, longitude } = await getCurrentLocation();
-
-    await startDelivery(
-      delivery.ride_uuid,
-      "Unknown Location",
-      `${latitude},${longitude}`
-    );
-
-    window.location.reload();
-  }
-
-  const complete = async () => {
-    setLoading(true);
-    const { latitude, longitude } = await getCurrentLocation();
-
-    await endDelivery(
-      delivery.ride_uuid,
-      "Unknown Location",
-      `${latitude},${longitude}`
-    );
-
-    window.location.reload();
-  }
-
-  const cancel = async () => {
-    setLoading(true);
-    await cancelDelivery(delivery.ride_uuid);
-    window.location.reload();
-  }
-
-  if (ready && !delivery) {
-    return (<ErrorView
-      code={404}
-      message="Delivery not found"
-    />);
-  }
+  useEffect(() => {
+    (async () => {
+      const details = await getDeliveryDetails(rider_uuid);
+      setDelivery(details);
+      setLoading(false);
+    })();
+  }, [ rider_uuid, getDeliveryDetails ]);
 
   if (!ready || loading) {
-    return (<LoadingView />);
+    return <LoadingView />;
   }
 
-  const status = delivery.ride_status || "pending";
+  if (!delivery) {
+    return <ErrorView
+      code={404}
+      message="Delivery not found"
+    />;
+  }
+
+  const status = delivery.rideStatus || "pending";
 
   const trip: {
     friendlyName: string | null;
     coords: string | null;
   }[] = [
     {
-      friendlyName: delivery.start_location,
-      coords: delivery.start_coordinates,
+      friendlyName: delivery.startLocation,
+      coords: delivery.startCoordinates,
     },
     {
-      friendlyName: delivery.end_location,
-      coords: delivery.end_coordinates,
+      friendlyName: delivery.endLocation,
+      coords: delivery.endCoordinates,
     },
   ];
 
@@ -117,8 +98,8 @@ export function DeliveryView({
           </Heading>
 
           <Text>
-            {!!delivery.requested_at && new Date(
-              delivery.requested_at * 1000
+            {!!delivery.requestedAt && new Date(
+              delivery.requestedAt * 1000
             ).toLocaleString("en-US", {
               weekday: "long",
               year: "numeric",
@@ -152,20 +133,23 @@ export function DeliveryView({
                   {location.friendlyName || "Unknown Location"}
                 </Text>
 
-                {!location.coords
-                  ? "(No coordinates)"
-                  : <Container
-                    className={useClasses("delivery-view-trip-coords")}
-                  >
-                    <Text>
-                      Lat: {location.coords.split(",")[0]}
-                    </Text>
+                <Container
+                  className={useClasses("delivery-view-trip-coords")}
+                >
+                  <Text>
+                    Lat: {!location.coords
+                      ? "(Unavailable)"
+                      : location.coords!.split(",")[0]
+                    }
+                  </Text>
 
-                    <Text>
-                      Lng: {location.coords.split(",")[1]}
-                    </Text>
-                  </Container>
-                }
+                  <Text>
+                    Lng: {!location.coords
+                      ? "(Unavailable)"
+                      : location.coords!.split(",")[1]
+                    }
+                  </Text>
+                </Container>
               </Container>
             </Container>))}
           </Container>
@@ -188,27 +172,42 @@ export function DeliveryView({
             />}
 
             {status === "pending" && <Button
-              onClick={start}
               title="Start Delivery"
               icon="RocketRegular"
               hoverText="Start"
               disabled={status !== "pending"}
+
+              onClick={() => start(
+                delivery.rideUuid,
+                () => setLoading(true),
+                () => setLoading(false),
+              )}
             />}
 
             {status === "in_progress" && <Button
-              onClick={complete}
               title="Complete Delivery"
               icon="CheckCircleRegular"
               hoverText="Complete"
               disabled={status !== "in_progress"}
+
+              onClick={() => end(
+                delivery.rideUuid,
+                () => setLoading(true),
+                () => setLoading(false),
+              )}
             />}
 
             {["pending", "in_progress"].includes(status) && <Button
-              onClick={cancel}
               title="Cancel Delivery"
               icon="XmarkCircleRegular"
               hoverText="Cancel"
               disabled={["completed", "cancelled"].includes(status)}
+
+              onClick={() => cancel(
+                delivery.rideUuid,
+                () => setLoading(true),
+                () => setLoading(false),
+              )}
             />}
           </Container>
         </Container>
