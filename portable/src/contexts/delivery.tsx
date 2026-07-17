@@ -76,12 +76,20 @@ export function DeliveryProvider({ children }: ProviderProps) {
     finish_callback: () => void,
   ) => {
     start_callback();
+    let latitude: number;
+    let longitude: number;
+    let friendlyName: string;
 
-    const {
-      latitude,
-      longitude,
-      friendlyName,
-    } = await getCurrentLocation();
+    try {
+      const locData = await getCurrentLocation();
+      latitude = locData.latitude;
+      longitude = locData.longitude;
+      friendlyName = locData.friendlyName;
+    } catch (error) {
+      alert("Failed to get current location. Please try again.");
+      finish_callback();
+      return;
+    }
 
     try {
       const data = transformDeliveryEvent(
@@ -124,12 +132,20 @@ export function DeliveryProvider({ children }: ProviderProps) {
     finish_callback: () => void,
   ) => {
     start_callback();
+    let latitude: number;
+    let longitude: number;
+    let friendlyName: string;
 
-    const {
-      latitude,
-      longitude,
-      friendlyName,
-    } = await getCurrentLocation();
+    try {
+      const locData = await getCurrentLocation();
+      latitude = locData.latitude;
+      longitude = locData.longitude;
+      friendlyName = locData.friendlyName;
+    } catch (error) {
+      alert("Failed to get current location. Please try again.");
+      finish_callback();
+      return;
+    }
 
     try {
       const data = transformDeliveryEvent(
