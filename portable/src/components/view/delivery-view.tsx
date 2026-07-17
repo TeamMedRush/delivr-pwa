@@ -1,6 +1,7 @@
 import { useEffect, useState } from "preact/hooks";
 
 import { MapPin } from "@attaditya/iconoir-preact";
+import { AttributeTable } from "@components/kit/attribute-table";
 import { StatusIcon } from "@components/kit/status-icon";
 import { Button } from "@components/ui/interactive/button";
 import { LinkButton } from "@components/ui/interactive/link-button";
@@ -93,21 +94,30 @@ export function DeliveryView({
             size="small"
             className={useClasses("delivery-view-subheading")}
           >
-            Delivery Requested At
+            Delivery Details
           </Heading>
 
-          <Text>
-            {!!delivery.requestedAt && new Date(
-              delivery.requestedAt * 1000
-            ).toLocaleString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-              hour: "numeric",
-              minute: "numeric",
-            })}
-          </Text>
+          <AttributeTable
+            attributes={[
+              {
+                name: "Ref No.",
+                value: delivery.invoiceNumber,
+              },
+              {
+                name: "Date",
+                value: !delivery.requestedAt ? "Unavailable" : new Date(
+                  delivery.requestedAt * 1000
+                ).toLocaleString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: embedded ? "numeric" : "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                }),
+              },
+            ]}
+          />
         </Container>
 
         <Container className={useClasses("delivery-view-container")}>
