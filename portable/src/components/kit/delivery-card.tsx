@@ -24,18 +24,19 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
           size="small"
           className={useClasses("delivery-card-name")}
         >
-          {!!delivery.requestedAt && new Date(
+          {delivery.invoiceNumber}
+
+          {/* {!!delivery.requestedAt && new Date(
             delivery.requestedAt * 1000
           ).toLocaleString("en-US", {
-            weekday: "long",
             year: "numeric",
-            month: "long",
+            month: "numeric",
             day: "numeric",
             hour: "numeric",
             minute: "numeric",
           })}
 
-          {!delivery.requestedAt && "Delivery"}
+          {!delivery.requestedAt && "Delivery"} */}
         </Heading>
       </Container>
 

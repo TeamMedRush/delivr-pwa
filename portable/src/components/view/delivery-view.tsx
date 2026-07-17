@@ -205,19 +205,6 @@ export function DeliveryView({
                 () => setLoading(false),
               )}
             />}
-
-            {["pending", "in_progress"].includes(status) && <Button
-              title="Cancel Delivery"
-              icon="XmarkCircleRegular"
-              hoverText="Cancel"
-              disabled={["completed", "cancelled"].includes(status)}
-
-              onClick={() => cancel(
-                delivery.rideUuid,
-                () => setLoading(true),
-                () => setLoading(false),
-              )}
-            />}
           </Container>
         </Container>
       </Container>
