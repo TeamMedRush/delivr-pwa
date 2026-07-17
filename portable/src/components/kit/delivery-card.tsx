@@ -2,6 +2,7 @@ import { StatusIcon } from "@components/kit/status-icon";
 import { LinkButton } from "@components/ui/interactive/link-button";
 import { Container } from "@components/ui/structure/container";
 import { Heading } from "@components/ui/text/heading";
+import { Text } from "@components/ui/text/text";
 import { Delivery } from "@interfaces/delivery";
 import { useClasses } from "@styles";
 
@@ -25,8 +26,10 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
           className={useClasses("delivery-card-name")}
         >
           {delivery.invoiceNumber}
+        </Heading>
 
-          {/* {!!delivery.requestedAt && new Date(
+        <Text >
+          {!!delivery.requestedAt && new Date(
             delivery.requestedAt * 1000
           ).toLocaleString("en-US", {
             year: "numeric",
@@ -36,8 +39,8 @@ export function DeliveryCard({ delivery }: DeliveryCardProps) {
             minute: "numeric",
           })}
 
-          {!delivery.requestedAt && "Delivery"} */}
-        </Heading>
+          {!delivery.requestedAt && "Delivery"}
+        </Text>
       </Container>
 
       <Container className={useClasses("delivery-card-actions")}>

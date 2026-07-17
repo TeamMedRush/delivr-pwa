@@ -28,7 +28,6 @@ export function DeliveryView({
     getDeliveryDetails,
     start,
     end,
-    cancel,
   } = useDelivery();
 
   const [loading, setLoading] = useState(true);
