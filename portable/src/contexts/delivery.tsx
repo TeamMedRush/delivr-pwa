@@ -76,13 +76,18 @@ export function DeliveryProvider({ children }: ProviderProps) {
     finish_callback: () => void,
   ) => {
     start_callback();
-    const { latitude, longitude } = await getCurrentLocation();
+
+    const {
+      latitude,
+      longitude,
+      friendlyName,
+    } = await getCurrentLocation();
 
     try {
       const data = transformDeliveryEvent(
         await startDelivery(
           ride_uuid,
-          "Unknown Location",
+          friendlyName,
           `${latitude},${longitude}`,
         )
       );
@@ -119,13 +124,18 @@ export function DeliveryProvider({ children }: ProviderProps) {
     finish_callback: () => void,
   ) => {
     start_callback();
-    const { latitude, longitude } = await getCurrentLocation();
+
+    const {
+      latitude,
+      longitude,
+      friendlyName,
+    } = await getCurrentLocation();
 
     try {
       const data = transformDeliveryEvent(
         await endDelivery(
           ride_uuid,
-          "Unknown Location",
+          friendlyName,
           `${latitude},${longitude}`,
         )
       );

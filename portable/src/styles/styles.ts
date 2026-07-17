@@ -48,6 +48,7 @@ const classNames = {
   'delivery-view-trip': 'delivery-view-trip',
   'delivery-view-trip-coords': 'delivery-view-trip-coords',
   'delivery-view-trip-icon': 'delivery-view-trip-icon',
+  'delivery-view-trip-location': 'delivery-view-trip-location',
   'delivery-view-trip-text': 'delivery-view-trip-text',
   'delivery-view-trips': 'delivery-view-trips',
   'error-code': 'error-code',

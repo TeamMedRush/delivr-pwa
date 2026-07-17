@@ -1,6 +1,5 @@
 import { useEffect, useState } from "preact/hooks";
 
-import { cancelDelivery, endDelivery, startDelivery } from "@api/delivery-actions";
 import { MapPin } from "@attaditya/iconoir-preact";
 import { StatusIcon } from "@components/kit/status-icon";
 import { Button } from "@components/ui/interactive/button";
@@ -13,7 +12,7 @@ import { ErrorView } from "@components/view/not-found-view";
 import { useDelivery } from "@contexts/delivery";
 import { Delivery } from "@interfaces/delivery";
 import { useClasses } from "@styles";
-import { getCurrentLocation, mapUrl } from "@utils/location";
+import { mapUrl } from "@utils/location";
 
 interface DeliveryViewProps {
   rider_uuid: string;
@@ -129,7 +128,7 @@ export function DeliveryView({
               </Container>
 
               <Container className={useClasses("delivery-view-trip-text")}>
-                <Text>
+                <Text className={useClasses("delivery-view-trip-location")}>
                   {location.friendlyName || "Unknown Location"}
                 </Text>
 

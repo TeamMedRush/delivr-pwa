@@ -1,3 +1,6 @@
+import { fetchLocationFriendlyName } from "@api/location";
+import { transformLocFriendlyName } from "@transformers/location";
+
 const MAP_PLATFORM = "https://www.google.com/maps/";
 
 export function mapUrl(origin: string, destination: string): string {
@@ -7,19 +10,33 @@ export function mapUrl(origin: string, destination: string): string {
 export function getCurrentLocation(): Promise<{
   latitude: number;
   longitude: number;
+  friendlyName: string;
 }> {
   return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        resolve({
-          latitude: position.coords.latitude,
-          longitude: position.coords.longitude
-        });
-      },
-      (error) => {
-        reject(error);
+    navigator.geolocation.getCurrentPosition(async (position) => {
+      let friendlyName = "Unknown Location";
+
+      try {
+        const data = transformLocFriendlyName(
+          await fetchLocationFriendlyName(
+            position.coords.latitude,
+            position.coords.longitude,
+          )
+        );
+
+        friendlyName = data.friendlyName;
+      } catch (error) {
+        console.error(
+          "Error fetching location friendly name:", error
+        );
       }
-    );
+
+      resolve({
+        latitude: position.coords.latitude,
+        longitude: position.coords.longitude,
+        friendlyName,
+      });
+    }, (error) => { reject(error); });
   });
 }
 

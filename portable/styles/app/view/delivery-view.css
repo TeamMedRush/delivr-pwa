@@ -64,8 +64,9 @@
 }
 
 .delivery-view-trips {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
+  grid-auto-rows: 1fr;
   gap: 0.5rem;
 }
 
@@ -73,6 +74,8 @@
   display: flex;
   gap: 0.5rem;
   align-items: center;
+  width: 100%;
+  overflow: hidden;
 }
 
 .delivery-view-trip-icon {
@@ -90,10 +93,20 @@
 }
 
 .delivery-view-trip-text {
-  font-size: 1.25rem;
   display: flex;
   flex-direction: column;
+  overflow: hidden;
+}
+
+.delivery-view-trip-location {
+  font-size: 1.25rem;
   font-weight: 900;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+
 }
 
 .delivery-view-trip-coords {
