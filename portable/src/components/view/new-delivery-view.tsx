@@ -56,7 +56,7 @@ export function NewDeliveryView() {
             fields={[
               {
                 label: "Order Reference Number",
-                type: "text",
+                type: "number",
                 updateValue: setInvoiceNumber,
               }
             ]}
