@@ -3,6 +3,12 @@ import { transformLocFriendlyName } from "@transformers/location";
 
 const MAP_PLATFORM = "https://www.google.com/maps/";
 
+const GEO_OPTIONS: PositionOptions = {
+  enableHighAccuracy: true,
+  timeout: 15000,
+  maximumAge: 60000,
+};
+
 export function mapUrl(origin: string, destination: string): string {
   return `${MAP_PLATFORM}dir/?api=1&origin=${origin}&destination=${destination}`;
 }
@@ -36,7 +42,10 @@ export function getCurrentLocation(): Promise<{
         longitude: position.coords.longitude,
         friendlyName,
       });
-    }, (error) => { reject(error); });
+    },
+    (error) => { reject(error); },
+    GEO_OPTIONS,
+  );
   });
 }
 
