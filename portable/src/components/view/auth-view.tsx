@@ -79,6 +79,8 @@ export function AuthView({
 
   if (authenticated) {
     window.location.href = "/profile";
+
+    return <LoadingView />;
   }
 
   return (
