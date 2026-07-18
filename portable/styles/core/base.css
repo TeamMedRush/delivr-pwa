@@ -77,6 +77,22 @@ a {
   color: inherit;
 }
 
+.pending {
+  --color-emote: var(--color-neutral);
+}
+
+.in-progress {
+  --color-emote: var(--color-warning);
+}
+
+.completed {
+  --color-emote: var(--color-success);
+}
+
+.cancelled {
+  --color-emote: var(--color-failure);
+}
+
 ::-webkit-scrollbar {
   width: 0;
   background-color: transparent;

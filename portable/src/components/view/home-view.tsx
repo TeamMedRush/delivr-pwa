@@ -19,10 +19,6 @@ export function HomeView() {
       <Container
         className={useClasses("home-view-header")}
       >
-        {/* <Heading size="large">
-          Delivr
-        </Heading> */}
-
         <Image
           src="/logo.png"
           alt="Delivr Logo"
