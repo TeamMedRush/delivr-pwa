@@ -2,9 +2,11 @@
   display: flex;
   gap: 0.5rem;
   padding: 0.5rem;
-  border: 0.125rem solid var(--color-focus);
   border-radius: 1rem;
   align-items: center;
+  border: 0.125rem solid color(
+    from var(--color-focus) xyz x y z / 0.3
+  )
 }
 
 .delivery-card-status {

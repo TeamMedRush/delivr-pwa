@@ -7,7 +7,9 @@
 
 .delivery-view-embedded {
   border-radius: 1rem;
-  border: 0.125rem solid var(--color-focus);
+  border: 0.125rem solid color(
+    from var(--color-focus) xyz x y z / 0.3
+  );
 }
 
 .delivery-view-status-container {

@@ -72,6 +72,13 @@ export function DeliveryView({
     <Container className={useClasses(
       "delivery-view",
       embedded && "delivery-view-embedded",
+      {
+        "pending": "pending",
+        "in_progress": "in-progress",
+        "completed": "completed",
+        "cancelled": "cancelled",
+        "": ""
+      }[delivery.rideStatus || ""] as any,
     )}>
       <Container className={useClasses("delivery-view-status-container")}>
         <StatusIcon

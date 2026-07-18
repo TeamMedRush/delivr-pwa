@@ -1,5 +1,6 @@
 import { LinkButton } from "@components/ui/interactive/link-button";
 import { Container } from "@components/ui/structure/container";
+import { Image } from "@components/ui/structure/image";
 import { Heading } from "@components/ui/text/heading";
 import { DeliveryView } from "@components/view/delivery-view";
 import { HistoryView } from "@components/view/history-view";
@@ -18,9 +19,15 @@ export function HomeView() {
       <Container
         className={useClasses("home-view-header")}
       >
-        <Heading size="large">
+        {/* <Heading size="large">
           Delivr
-        </Heading>
+        </Heading> */}
+
+        <Image
+          src="/logo.png"
+          alt="Delivr Logo"
+          className={useClasses("home-view-logo")}
+        />
       </Container>
 
       <Container className={useClasses("home-view-content")}>

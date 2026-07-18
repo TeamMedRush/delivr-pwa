@@ -76,6 +76,7 @@ const classNames = {
   'home-view': 'home-view',
   'home-view-content': 'home-view-content',
   'home-view-header': 'home-view-header',
+  'home-view-logo': 'home-view-logo',
   'input': 'input',
   'input-container': 'input-container',
   'large-card': 'large-card',

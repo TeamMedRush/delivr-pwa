@@ -12,7 +12,16 @@ interface DeliveryCardProps {
 
 export function DeliveryCard({ delivery }: DeliveryCardProps) {
   return (<>
-    <Container className={useClasses("delivery-card")}>
+    <Container className={useClasses(
+      "delivery-card",
+      {
+        "pending": "pending",
+        "in_progress": "in-progress",
+        "completed": "completed",
+        "cancelled": "cancelled",
+        "": ""
+      }[delivery.rideStatus || ""] as any,
+    )}>
       <Container className={useClasses("delivery-card-status")}>
         <StatusIcon
           status={delivery.rideStatus || "pending"}
