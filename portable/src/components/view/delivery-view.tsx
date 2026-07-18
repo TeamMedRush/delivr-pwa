@@ -110,7 +110,7 @@ export function DeliveryView({
                 value: delivery.invoiceNumber,
               },
               {
-                name: "Date",
+                name: "Received At",
                 value: !delivery.requestedAt ? "Unavailable" : new Date(
                   delivery.requestedAt * 1000
                 ).toLocaleString("en-US", {
@@ -122,6 +122,32 @@ export function DeliveryView({
                   minute: "numeric",
                 }),
               },
+              ...(!delivery.pickedUpAt ? [] : [{
+                name: "Started At",
+                value: !delivery.pickedUpAt ? "Unavailable" : new Date(
+                  delivery.pickedUpAt * 1000
+                ).toLocaleString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: embedded ? "numeric" : "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                }),
+              }]),
+              ...(!delivery.droppedAt ? [] : [{
+                name: "Dropped At",
+                value: !delivery.droppedAt ? "Unavailable" : new Date(
+                  delivery.droppedAt * 1000
+                ).toLocaleString("en-US", {
+                  weekday: "long",
+                  year: "numeric",
+                  month: embedded ? "numeric" : "long",
+                  day: "numeric",
+                  hour: "numeric",
+                  minute: "numeric",
+                }),
+              }]),
             ]}
           />
         </Container>
