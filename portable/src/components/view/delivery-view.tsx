@@ -58,14 +58,14 @@ export function DeliveryView({
     friendlyName: string | null;
     coords: string | null;
   }[] = [
-    {
+    ...(!delivery.startCoordinates ? [] : [{
       friendlyName: delivery.startLocation,
       coords: delivery.startCoordinates,
-    },
-    {
+    }]),
+    ...(!delivery.endCoordinates ? [] : [{
       friendlyName: delivery.endLocation,
       coords: delivery.endCoordinates,
-    },
+    }]),
   ];
 
   return (
@@ -126,7 +126,9 @@ export function DeliveryView({
           />
         </Container>
 
-        <Container className={useClasses("delivery-view-container")}>
+        {!!trip.length && <Container
+          className={useClasses("delivery-view-container")}
+        >
           <Heading
             size="small"
             className={useClasses("delivery-view-subheading")}
@@ -168,7 +170,7 @@ export function DeliveryView({
               </Container>
             </Container>))}
           </Container>
-        </Container>
+        </Container>}
 
         <Container className={useClasses("delivery-view-container")}>
           <Heading
