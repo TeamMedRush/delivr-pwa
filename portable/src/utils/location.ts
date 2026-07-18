@@ -5,8 +5,8 @@ const MAP_PLATFORM = "https://www.google.com/maps/";
 
 const GEO_OPTIONS: PositionOptions = {
   enableHighAccuracy: true,
-  timeout: 15000,
-  maximumAge: 60000,
+  timeout: 10000,
+  maximumAge: 7000,
 };
 
 export function mapUrl(origin: string, destination: string): string {
