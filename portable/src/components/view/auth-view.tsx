@@ -73,12 +73,12 @@ export function AuthView({
     ],
   };
 
-  if (authenticated) {
-    window.location.href = "/profile";
-  }
-
   if (!ready || authenticating) {
     return <LoadingView />;
+  }
+
+  if (authenticated) {
+    window.location.href = "/profile";
   }
 
   return (
