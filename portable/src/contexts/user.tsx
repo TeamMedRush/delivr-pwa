@@ -11,6 +11,15 @@ import {
 
 import { transformUser } from "@transformers/user";
 
+type DelivrWindow = Window & {
+  Apx?: {
+    permit: (options: { authKey: string }) => Promise<{ success: boolean }>;
+    revoke: () => Promise<void>;
+    startService: () => Promise<{ success: boolean }>;
+    stopService: () => Promise<void>;
+  };
+};
+
 interface UserMeta {
   ready: boolean;
   authenticating: boolean;
@@ -28,7 +37,7 @@ interface UserMeta {
     password: string,
   ) => Promise<void>;
 
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 
 interface ProviderProps {
@@ -59,6 +68,12 @@ export function UserProvider({ children }: ProviderProps) {
       }
 
       localStorage.setItem("apiToken", data.accessToken);
+
+      await (window as DelivrWindow).Apx?.permit?.({
+        authKey: data.accessToken
+      });
+
+      await (window as DelivrWindow).Apx?.startService?.();
       setAuthenticated(true);
     } catch (error) {
       alert("Login failed. Please check your credentials and try again.");
@@ -92,7 +107,9 @@ export function UserProvider({ children }: ProviderProps) {
     setAuthenticating(false);
   }, []);
 
-  const logout = useCallback(() => {
+  const logout = useCallback(async () => {
+    await (window as DelivrWindow).Apx?.stopService?.();
+    await (window as DelivrWindow).Apx?.revoke?.();
     localStorage.clear();
     setAuthenticated(false);
     setUser(null);

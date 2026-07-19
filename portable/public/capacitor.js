@@ -1,7 +1,25 @@
 // capacitor-polyfill.js
 
-document.addEventListener("DOMContentLoaded", async () => {
-  if (!window.Capacitor?.isNativePlatform?.()) return;
+function addApxPolyfill() {
+  const Apx = window.Capacitor.Plugins.Apx;
+
+  window.Apx = {
+    permit: async (options) => {
+      return await Apx.permit(options);
+    },
+    revoke: async () => {
+      return await Apx.revoke();
+    },
+    startService: async () => {
+      return await Apx.startService();
+    },
+    stopService: async () => {
+      return await Apx.stopService();
+    },
+  };
+}
+
+function addGeolocationPolyfill() {
   const Geolocation = window.Capacitor.Plugins.Geolocation;
 
   navigator.geolocation.getCurrentPosition = async (success, error, options) => {
@@ -21,5 +39,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   navigator.geolocation.clearWatch = (id) =>
     Geolocation.clearWatch({ id });
+}
+
+document.addEventListener("DOMContentLoaded", async () => {
+  if (!window.Capacitor?.isNativePlatform?.())
+    return;
+
+  addApxPolyfill();
+  addGeolocationPolyfill();
 });
 
