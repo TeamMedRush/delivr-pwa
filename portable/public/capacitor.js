@@ -1,7 +1,12 @@
 // capacitor-polyfill.js
 
 function addApxPolyfill() {
-  const Apx = window.Capacitor.Plugins.Apx;
+  const Apx = window.Capacitor?.Plugins?.Apx;
+
+  if (!Apx) {
+    console.warn("Apx plugin is not available.");
+    return;
+  }
 
   window.Apx = {
     permit: async (options) => {
