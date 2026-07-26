@@ -12,6 +12,24 @@ interface RawDelivery {
   end_coordinates: string | null;
   dropped_at: number | null;
   cancelled_at: number | null;
+
+  order_details: {
+    ref_id: string | null;
+    order_type: string | null;
+    address: string | null;
+    channel: string | null;
+    contact_name: string | null;
+    contact_no: string | null;
+    delivery_slot: string | null;
+    delivery_type: string | null;
+    latitude: number | null;
+    longitude: number | null;
+    payment_mode: string | null;
+    payment_remarks: string | null;
+    payment_status: string | null;
+    pos_sync_remarks: string | null;
+    pos_sync_status: string | null;
+  } | null;
 }
 
 interface DeliveryListRawData {
@@ -35,6 +53,23 @@ function transformDelivery(raw: RawDelivery): Delivery {
     endCoordinates: raw.end_coordinates,
     droppedAt: raw.dropped_at,
     cancelledAt: raw.cancelled_at,
+    orderDetails: !raw.order_details ? null : {
+      refId: raw.order_details.ref_id,
+      orderType: raw.order_details.order_type,
+      address: raw.order_details.address,
+      channel: raw.order_details.channel,
+      contactName: raw.order_details.contact_name,
+      contactNo: raw.order_details.contact_no,
+      deliverySlot: raw.order_details.delivery_slot,
+      deliveryType: raw.order_details.delivery_type,
+      latitude: raw.order_details.latitude,
+      longitude: raw.order_details.longitude,
+      paymentMode: raw.order_details.payment_mode,
+      paymentRemarks: raw.order_details.payment_remarks,
+      paymentStatus: raw.order_details.payment_status,
+      posSyncRemarks: raw.order_details.pos_sync_remarks,
+      posSyncStatus: raw.order_details.pos_sync_status,
+    }
   };
 }
 

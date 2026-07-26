@@ -58,13 +58,6 @@ export function DeliveryProvider({ children }: ProviderProps) {
   const [latest, setLatest] = useState<Delivery | null>(null);
 
   const getDeliveryDetails = useCallback(async (ride_uuid: string) => {
-    const existing = history.filter(
-      (item) => item.rideUuid === ride_uuid
-    )[0];
-
-    if (existing)
-      return existing;
-
     return transformDeliveryDetails(
       await fetchDeliveryDetails(ride_uuid)
     );

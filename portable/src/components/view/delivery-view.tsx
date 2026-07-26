@@ -14,6 +14,7 @@ import { useDelivery } from "@contexts/delivery";
 import { Delivery } from "@interfaces/delivery";
 import { useClasses } from "@styles";
 import { mapUrl } from "@utils/location";
+import { camelToTitle } from "@utils/string";
 
 interface DeliveryViewProps {
   rider_uuid: string;
@@ -67,6 +68,8 @@ export function DeliveryView({
       coords: delivery.endCoordinates,
     }]),
   ];
+
+  console.log(delivery.orderDetails);
 
   return (
     <Container className={useClasses(
@@ -197,6 +200,26 @@ export function DeliveryView({
             </Container>))}
           </Container>
         </Container>}
+
+        {!!delivery.orderDetails && !embedded && (
+          <Container className={useClasses("delivery-view-container")}>
+            <Heading
+              size="small"
+              className={useClasses("delivery-view-subheading")}
+            >
+              Order Details
+            </Heading>
+
+            <AttributeTable
+              attributes={Object.keys(
+                delivery.orderDetails || {}
+              ).map(key => ({
+                name: camelToTitle(key),
+                value: (delivery.orderDetails as any)[key] || "Unavailable",
+              }))}
+            />
+          </Container>
+        )}
 
         <Container className={useClasses("delivery-view-container")}>
           <Heading
