@@ -78,9 +78,9 @@ export function UserProvider({ children }: ProviderProps) {
     } catch (error) {
       alert("Login failed. Please check your credentials and try again.");
       return;
+    } finally {
+      setAuthenticating(false);
     }
-
-    setAuthenticating(false);
   }, []);
 
   const register = useCallback(async (
@@ -102,9 +102,9 @@ export function UserProvider({ children }: ProviderProps) {
       await login(phoneNumber, password);
     } catch (error) {
       alert("Account creation failed. Please check your details and try again.");
+    } finally {
+      setAuthenticating(false);
     }
-
-    setAuthenticating(false);
   }, []);
 
   const logout = useCallback(async () => {
