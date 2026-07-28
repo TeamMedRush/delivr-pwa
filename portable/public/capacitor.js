@@ -29,6 +29,12 @@ function addGeolocationPolyfill() {
 
   navigator.geolocation.getCurrentPosition = async (success, error, options) => {
     try {
+      try {
+        await Geolocation.requestPermissions();
+      } catch (e) {
+        console.warn("Geolocation permission request failed:", e);
+      }
+
       const pos = await Geolocation.getCurrentPosition(options);
       success(pos);
     } catch (e) {
