@@ -34,6 +34,7 @@ export function HomeView() {
           icon="PlusRegular"
           title="New Delivery"
           url="/new-delivery"
+          urlText="Create Delivery"
           newTab={false}
         />
       </Container>
@@ -61,6 +62,7 @@ export function HomeView() {
           icon="ClockRegular"
           title="See All"
           url="/history"
+          urlText="View History"
           newTab={false}
         />
       </Container>
