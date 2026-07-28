@@ -13,10 +13,8 @@ function Layout({ dynamic }: LayoutProps) {
     </>);
 
   return (<>
-    <DeliveryProvider>
-      <DeliveryView
-        rider_uuid={dynamic}
-      />
+    <DeliveryProvider ride_uuid={dynamic}>
+      <DeliveryView />
     </DeliveryProvider>
   </>);
 }

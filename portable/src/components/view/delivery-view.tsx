@@ -1,4 +1,4 @@
-import { useEffect, useState } from "preact/hooks";
+import { useState } from "preact/hooks";
 
 import { MapPin } from "@attaditya/iconoir-preact";
 import { AttributeTable } from "@components/kit/attribute-table";
@@ -11,38 +11,25 @@ import { Text } from "@components/ui/text/text";
 import { LoadingView } from "@components/view/loading-view";
 import { ErrorView } from "@components/view/not-found-view";
 import { useDelivery } from "@contexts/delivery";
-import { Delivery } from "@interfaces/delivery";
 import { useClasses } from "@styles";
 import { mapUrl } from "@utils/location";
 import { camelToTitle } from "@utils/string";
 
 interface DeliveryViewProps {
-  rider_uuid: string;
   embedded?: boolean;
 }
 
 export function DeliveryView({
-  rider_uuid, embedded = false
+  embedded = false
 }: DeliveryViewProps) {
   const {
     ready,
-    getDeliveryDetails,
     start,
     end,
+    current: { stale, data: delivery },
   } = useDelivery();
 
-  const [loading, setLoading] = useState(true);
-  const [delivery, setDelivery] = useState<Delivery | null>(null);
-
-  useEffect(() => {
-    (async () => {
-      const details = await getDeliveryDetails(rider_uuid);
-      setDelivery(details);
-      setLoading(false);
-    })();
-  }, [ rider_uuid, getDeliveryDetails ]);
-
-  if (!ready || loading) {
+  if (!ready && !delivery) {
     return <LoadingView />;
   }
 
@@ -69,8 +56,6 @@ export function DeliveryView({
     }]),
   ];
 
-  console.log(delivery.orderDetails);
-
   return (
     <Container className={useClasses(
       "delivery-view",
@@ -83,6 +68,10 @@ export function DeliveryView({
         "": ""
       }[delivery.rideStatus || ""] as any,
     )}>
+      {stale && <Text className={useClasses("delivery-view-stale")}>
+        Syncing...
+      </Text>}
+
       <Container className={useClasses("delivery-view-status-container")}>
         <StatusIcon
           status={status}
@@ -241,26 +230,24 @@ export function DeliveryView({
               title="Start Delivery"
               icon="RocketRegular"
               hoverText="Start"
-              disabled={status !== "pending"}
-
-              onClick={() => start(
-                delivery.rideUuid,
-                () => setLoading(true),
-                () => setLoading(false),
-              )}
+              disabled={stale ||  status !== "pending"}
+              onClick={start}
             />}
 
             {status === "in_progress" && <Button
               title="Complete Delivery"
               icon="CheckCircleRegular"
               hoverText="Complete"
-              disabled={status !== "in_progress"}
+              disabled={stale || status !== "in_progress"}
+              onClick={end}
+            />}
 
-              onClick={() => end(
-                delivery.rideUuid,
-                () => setLoading(true),
-                () => setLoading(false),
-              )}
+            {embedded && <LinkButton
+              icon="InfoCircleRegular"
+              title="More Details"
+              url={`/delivery/${delivery.rideUuid}`}
+              urlText="See More"
+              newTab={false}
             />}
           </Container>
         </Container>

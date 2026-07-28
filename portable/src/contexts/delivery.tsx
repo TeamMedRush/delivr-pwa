@@ -7,68 +7,43 @@ import {
   startDelivery,
 } from "@api/delivery-actions";
 
-import {
-  fetchDeliveryDetails,
-  fetchDeliveryHistory,
-} from "@api/delivery-history";
-
+import { fetchDeliveryDetails, fetchDeliveryHistory } from "@api/delivery-history";
 import { Delivery } from "@interfaces/delivery";
-import {
-  transformDeliveryDetails,
-  transformDeliveryList,
-} from "@transformers/delivery";
-
+import { FastData } from "@interfaces/fast";
+import { transformDeliveryDetails, transformDeliveryList } from "@transformers/delivery";
 import { transformDeliveryEvent } from "@transformers/delivery-actions";
 import { getCurrentLocation } from "@utils/location";
+import { getStorage } from "@utils/storage";
 
 interface DeliveryMeta {
   ready: boolean;
-  history: Delivery[];
-  latest: Delivery | null;
-  getDeliveryDetails: (ride_uuid: string) => Promise<Delivery | null>;
-
-  start: (
-    ride_uuid: string,
-    start_callback: () => void,
-    finish_callback: () => void,
-  ) => Promise<void>;
-
-  end: (
-    ride_uuid: string,
-    start_callback: () => void,
-    finish_callback: () => void,
-  ) => Promise<void>;
-
-  cancel: (
-    ride_uuid: string,
-    start_callback: () => void,
-    finish_callback: () => void,
-  ) => Promise<void>;
+  current: FastData<Delivery | null>;
+  start: () => Promise<void>;
+  end: () => Promise<void>;
+  cancel: () => Promise<void>;
 }
 
 interface ProviderProps {
   children: ComponentChildren;
+  ride_uuid?: string | null;
 }
 
 const DeliveryContext = createContext<DeliveryMeta | null>(null);
 
-export function DeliveryProvider({ children }: ProviderProps) {
+export function DeliveryProvider({
+  children,
+  ride_uuid = null,
+}: ProviderProps) {
+  const storageKey = `fastdata::delivery::${ride_uuid}`;
   const [ready, setReady] = useState(false);
-  const [history, setHistory] = useState<Delivery[]>([]);
-  const [latest, setLatest] = useState<Delivery | null>(null);
 
-  const getDeliveryDetails = useCallback(async (ride_uuid: string) => {
-    return transformDeliveryDetails(
-      await fetchDeliveryDetails(ride_uuid)
-    );
-  }, [history]);
+  const [current, setCurrent] = useState<FastData<Delivery | null>>({
+    stale: true,
+    data: getStorage(storageKey) || null,
+  });
 
-  const start = useCallback(async (
-    ride_uuid: string,
-    start_callback: () => void,
-    finish_callback: () => void,
-  ) => {
-    start_callback();
+  const start = useCallback(async () => {
+    setReady(false);
     let latitude: number;
     let longitude: number;
     let friendlyName: string;
@@ -80,14 +55,14 @@ export function DeliveryProvider({ children }: ProviderProps) {
       friendlyName = locData.friendlyName;
     } catch (error) {
       alert("Failed to get current location. Please try again.");
-      finish_callback();
+      setReady(true);
       return;
     }
 
     try {
       const data = transformDeliveryEvent(
         await startDelivery(
-          ride_uuid,
+          ride_uuid!,
           friendlyName,
           `${latitude},${longitude}`,
         )
@@ -98,33 +73,15 @@ export function DeliveryProvider({ children }: ProviderProps) {
           data.reason || "Failed to start delivery"
         );
       }
-
-      setHistory((prev) => prev.map((item) => {
-        if (item.rideUuid === ride_uuid) {
-          return {
-            ...item,
-            rideStatus: data.rideStatus,
-            pickedUpAt: data.eventTime,
-            startLocation: data.location,
-            startCoordinates: data.coordinates,
-          };
-        }
-
-        return item;
-      }));
     } catch (error) {
       alert("Failed to start delivery. Please try again.");
     }
 
-    finish_callback();
+    setReady(true);
   }, []);
 
-  const end = useCallback(async (
-    ride_uuid: string,
-    start_callback: () => void,
-    finish_callback: () => void,
-  ) => {
-    start_callback();
+  const end = useCallback(async () => {
+    setReady(false);
     let latitude: number;
     let longitude: number;
     let friendlyName: string;
@@ -136,14 +93,14 @@ export function DeliveryProvider({ children }: ProviderProps) {
       friendlyName = locData.friendlyName;
     } catch (error) {
       alert("Failed to get current location. Please try again.");
-      finish_callback();
+      setReady(true);
       return;
     }
 
     try {
       const data = transformDeliveryEvent(
         await endDelivery(
-          ride_uuid,
+          ride_uuid!,
           friendlyName,
           `${latitude},${longitude}`,
         )
@@ -154,37 +111,19 @@ export function DeliveryProvider({ children }: ProviderProps) {
           data.reason || "Failed to end delivery"
         );
       }
-
-      setHistory((prev) => prev.map((item) => {
-        if (item.rideUuid === ride_uuid) {
-          return {
-            ...item,
-            rideStatus: data.rideStatus,
-            droppedAt: data.eventTime,
-            endLocation: data.location,
-            endCoordinates: data.coordinates,
-          };
-        }
-
-        return item;
-      }));
     } catch (error) {
       alert("Failed to end delivery. Please try again.");
     }
 
-    finish_callback();
+    setReady(true);
   }, []);
 
-  const cancel = useCallback(async (
-    ride_uuid: string,
-    start_callback: () => void,
-    finish_callback: () => void,
-  ) => {
-    start_callback();
+  const cancel = useCallback(async () => {
+    setReady(false);
 
     try {
       const data = transformDeliveryEvent(
-        await cancelDelivery(ride_uuid)
+        await cancelDelivery(ride_uuid!)
       );
 
       if (!data.success) {
@@ -192,32 +131,57 @@ export function DeliveryProvider({ children }: ProviderProps) {
           data.reason || "Failed to cancel delivery"
         );
       }
-
-      setHistory((prev) => prev.map((item) => {
-        if (item.rideUuid === ride_uuid) {
-          return {
-            ...item,
-            rideStatus: data.rideStatus,
-            cancelledAt: data.eventTime,
-          };
-        }
-
-        return item;
-      }));
     } catch (error) {
       alert("Failed to cancel delivery. Please try again.");
     }
 
-    finish_callback();
+    setReady(true);
+  }, []);
+
+  const loadLatest = useCallback(async () => {
+    try {
+      const deliveries = transformDeliveryList(
+        await fetchDeliveryHistory()
+      );
+
+      const latestDelivery = deliveries[0] || null;
+      localStorage.setItem(storageKey, JSON.stringify(latestDelivery));
+    } catch (error) {
+      localStorage.setItem(storageKey, JSON.stringify(null));
+    }
+
+    setCurrent({
+      stale: false,
+      data: getStorage(storageKey) || null,
+    });
+
+    setReady(true);
   }, []);
 
   const load = useCallback(async () => {
-    const data = transformDeliveryList(
-      await fetchDeliveryHistory()
-    );
+    if (!ride_uuid) {
+      await loadLatest();
+      return;
+    }
 
-    setHistory(data);
-    setLatest(data[0] || null);
+    try {
+      const delivery = transformDeliveryDetails(
+        await fetchDeliveryDetails(ride_uuid)
+      );
+
+      localStorage.setItem(storageKey, JSON.stringify(delivery));
+
+      setCurrent({
+        stale: false,
+        data: delivery,
+      });
+    } catch (error) {
+      setCurrent({
+        stale: false,
+        data: null,
+      });
+    }
+
     setReady(true);
   }, []);
 
@@ -227,9 +191,7 @@ export function DeliveryProvider({ children }: ProviderProps) {
 
   const value = {
     ready,
-    history,
-    latest,
-    getDeliveryDetails,
+    current,
     start,
     end,
     cancel,

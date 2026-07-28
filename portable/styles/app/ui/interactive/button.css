@@ -122,10 +122,3 @@
   display: none;
 }
 
-@media (max-width: 800px) {
-  .button {
-    flex-direction: column;
-    gap: 0.75rem;
-  }
-}
-

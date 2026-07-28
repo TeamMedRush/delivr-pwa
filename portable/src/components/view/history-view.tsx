@@ -1,12 +1,15 @@
-import { Cycling, Delivery } from "@attaditya/iconoir-preact";
+import { Delivery } from "@attaditya/iconoir-preact";
 import { DeliveryCard } from "@components/kit/delivery-card";
 import { Container } from "@components/ui/structure/container";
+import { Spinner } from "@components/ui/structure/spinner";
 import { Heading } from "@components/ui/text/heading";
-import { useDelivery } from "@contexts/delivery";
+import { useHistory } from "@contexts/history";
 import { useClasses } from "@styles";
 
 export function HistoryView() {
-  const { ready, history } = useDelivery();
+  const {
+    history: { stale, data: history },
+  } = useHistory();
 
   return (<>
     <Container className={useClasses('history-view')}>
@@ -21,11 +24,8 @@ export function HistoryView() {
       </Container>
 
       <Container className={useClasses("history-view-content")}>
-        {!ready && <Container className={useClasses("history-view-loading")}>
-          <Cycling className={useClasses("history-view-loading-spinner")} />
-        </Container>}
-
-        {ready && !!history?.length && history.map(delivery => <DeliveryCard
+        {stale && <Spinner />}
+        {!!history?.length && history.map(delivery => <DeliveryCard
           key={delivery.rideUuid}
           delivery={delivery}
         />)}

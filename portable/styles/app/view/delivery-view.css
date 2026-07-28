@@ -3,6 +3,7 @@
   display: flex;
   flex-direction: column;
   overflow-y: auto;
+  position: relative;
 }
 
 .delivery-view-embedded {
@@ -129,5 +130,20 @@
 
 .delivery-view-filler {
   flex-grow: 1;
+}
+
+.delivery-view-stale {
+  display: flex;
+  justify-content: center;
+  font-size: 0.875rem;
+  position: absolute;
+  z-index: 1000;
+  top: 3rem;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--color-focus);
+  color: var(--color-white);
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
 }
 

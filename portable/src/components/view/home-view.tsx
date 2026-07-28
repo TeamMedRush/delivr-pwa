@@ -2,14 +2,12 @@ import { LinkButton } from "@components/ui/interactive/link-button";
 import { Container } from "@components/ui/structure/container";
 import { Image } from "@components/ui/structure/image";
 import { Heading } from "@components/ui/text/heading";
+import { Text } from "@components/ui/text/text";
 import { DeliveryView } from "@components/view/delivery-view";
-import { HistoryView } from "@components/view/history-view";
-import { useDelivery } from "@contexts/delivery";
+import { DeliveryProvider } from "@contexts/delivery";
 import { useClasses } from "@styles";
 
 export function HomeView() {
-  const { latest } = useDelivery();
-
   if (localStorage.getItem("apiToken") === null) {
     window.location.href = "/auth";
   }
@@ -27,10 +25,9 @@ export function HomeView() {
       </Container>
 
       <Container className={useClasses("home-view-content")}>
-        {latest && <DeliveryView
-          rider_uuid={latest.rideUuid}
-          embedded
-        />}
+        <DeliveryProvider>
+          <DeliveryView embedded />
+        </DeliveryProvider>
 
         <LinkButton
           icon="PlusRegular"
@@ -40,7 +37,28 @@ export function HomeView() {
         />
       </Container>
 
-      <HistoryView />
+      <Container className={useClasses("home-view-content")}>
+        <Heading size="medium">
+          Active Deliveries
+        </Heading>
+
+        <Text>
+          This section is work in progress.
+        </Text>
+      </Container>
+
+      <Container className={useClasses("home-view-content")}>
+        <Heading size="medium">
+          Delivery History
+        </Heading>
+
+        <LinkButton
+          icon="ClockRegular"
+          title="See All"
+          url="/history"
+          newTab={false}
+        />
+      </Container>
     </Container>
   </>);
 }
