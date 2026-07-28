@@ -5,11 +5,9 @@ import { useClasses } from "@styles";
 import { LayoutProps, PageProps, useRouter } from "@utils/router";
 
 function Layout({ dynamic }: LayoutProps) {
-  const page = dynamic ? parseInt(dynamic) : 1;
-
   return (<>
     <Container className={useClasses('history-page')}>
-      <HistoryProvider page={page}>
+      <HistoryProvider mode="all" limit={50}>
         <HistoryView />
       </HistoryProvider>
     </Container>

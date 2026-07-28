@@ -1,5 +1,6 @@
 import { Delivery } from "@attaditya/iconoir-preact";
 import { DeliveryCard } from "@components/kit/delivery-card";
+import { Button } from "@components/ui/interactive/button";
 import { Container } from "@components/ui/structure/container";
 import { Spinner } from "@components/ui/structure/spinner";
 import { Heading } from "@components/ui/text/heading";
@@ -15,7 +16,14 @@ export function HistoryView({
   embedded = false,
 }: HistoryViewProps) {
   const {
-    current: { stale, data: history },
+    ready,
+    older,
+    loadingMore,
+    loadMore,
+    current: {
+      stale,
+      data: history,
+    },
   } = useHistory();
 
   return (<>
@@ -44,11 +52,29 @@ export function HistoryView({
         "history-view-content",
         embedded && "embedded",
       )}>
-        {stale && <Spinner />}
+        {(stale || !ready) && <Spinner />}
         {!!history?.length && history.map(delivery => <DeliveryCard
           key={delivery.rideUuid}
           delivery={delivery}
         />)}
+
+        {!!older?.length && older.map((batch, index) => batch.map(
+          delivery => <DeliveryCard
+            key={`${delivery.rideUuid}-${index}`}
+            delivery={delivery}
+          />
+        ))}
+
+        {loadingMore && <Spinner />}
+        {!embedded && (<Container>
+          <Container>
+            <Button
+              icon="MoreHorizCircleRegular"
+              title="Load more"
+              onClick={loadMore}
+            />
+          </Container>
+        </Container>)}
       </Container>
     </Container>
   </>);

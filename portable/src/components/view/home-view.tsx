@@ -53,7 +53,7 @@ export function HomeView() {
           History
         </Heading>
 
-        <HistoryProvider mode="all">
+        <HistoryProvider mode="all" limit={5}>
           <HistoryView embedded />
         </HistoryProvider>
 
