@@ -1,29 +1,3 @@
-// capacitor-polyfill.js
-
-function addApxPolyfill() {
-  const Apx = window.Capacitor?.Plugins?.Apx;
-
-  if (!Apx) {
-    console.warn("Apx plugin is not available.");
-    return;
-  }
-
-  window.Apx = {
-    permit: async (options) => {
-      return await Apx.permit(options);
-    },
-    revoke: async () => {
-      return await Apx.revoke();
-    },
-    startService: async () => {
-      return await Apx.startService();
-    },
-    stopService: async () => {
-      return await Apx.stopService();
-    },
-  };
-}
-
 function addGeolocationPolyfill() {
   const Geolocation = window.Capacitor.Plugins.Geolocation;
 
@@ -56,7 +30,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (!window.Capacitor?.isNativePlatform?.())
     return;
 
-  addApxPolyfill();
   addGeolocationPolyfill();
 });
 
