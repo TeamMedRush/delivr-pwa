@@ -7,13 +7,21 @@ import {
   startDelivery,
 } from "@api/delivery-actions";
 
-import { fetchDeliveryDetails, fetchDeliveryHistory } from "@api/delivery-history";
+import {
+  fetchDeliveryDetails,
+  fetchDeliveryHistory,
+} from "@api/delivery-history";
+
 import { Delivery } from "@interfaces/delivery";
 import { FastData } from "@interfaces/fast";
-import { transformDeliveryDetails, transformDeliveryList } from "@transformers/delivery";
+import {
+  transformDeliveryDetails,
+  transformDeliveryList,
+} from "@transformers/delivery";
+
 import { transformDeliveryEvent } from "@transformers/delivery-actions";
 import { getCurrentLocation } from "@utils/location";
-import { getStorage } from "@utils/storage";
+import { checkStorage, getStorage } from "@utils/storage";
 
 interface DeliveryMeta {
   ready: boolean;
@@ -35,108 +43,12 @@ export function DeliveryProvider({
   ride_uuid = null,
 }: ProviderProps) {
   const storageKey = `fastdata::delivery::${ride_uuid}`;
-  const [ready, setReady] = useState(false);
+  const [ready, setReady] = useState(checkStorage(storageKey));
 
   const [current, setCurrent] = useState<FastData<Delivery | null>>({
     stale: true,
     data: getStorage(storageKey) || null,
   });
-
-  const start = useCallback(async () => {
-    setReady(false);
-    let latitude: number;
-    let longitude: number;
-    let friendlyName: string;
-
-    try {
-      const locData = await getCurrentLocation();
-      latitude = locData.latitude;
-      longitude = locData.longitude;
-      friendlyName = locData.friendlyName;
-    } catch (error) {
-      alert("Failed to get current location. Please try again.");
-      setReady(true);
-      return;
-    }
-
-    try {
-      const data = transformDeliveryEvent(
-        await startDelivery(
-          ride_uuid!,
-          friendlyName,
-          `${latitude},${longitude}`,
-        )
-      );
-
-      if (!data.success) {
-        throw new Error(
-          data.reason || "Failed to start delivery"
-        );
-      }
-    } catch (error) {
-      alert("Failed to start delivery. Please try again.");
-    }
-
-    setReady(true);
-  }, []);
-
-  const end = useCallback(async () => {
-    setReady(false);
-    let latitude: number;
-    let longitude: number;
-    let friendlyName: string;
-
-    try {
-      const locData = await getCurrentLocation();
-      latitude = locData.latitude;
-      longitude = locData.longitude;
-      friendlyName = locData.friendlyName;
-    } catch (error) {
-      alert("Failed to get current location. Please try again.");
-      setReady(true);
-      return;
-    }
-
-    try {
-      const data = transformDeliveryEvent(
-        await endDelivery(
-          ride_uuid!,
-          friendlyName,
-          `${latitude},${longitude}`,
-        )
-      );
-
-      if (!data.success) {
-        throw new Error(
-          data.reason || "Failed to end delivery"
-        );
-      }
-    } catch (error) {
-      alert("Failed to end delivery. Please try again.");
-    }
-
-    setReady(true);
-  }, []);
-
-  const cancel = useCallback(async () => {
-    setReady(false);
-
-    try {
-      const data = transformDeliveryEvent(
-        await cancelDelivery(ride_uuid!)
-      );
-
-      if (!data.success) {
-        throw new Error(
-          data.reason || "Failed to cancel delivery"
-        );
-      }
-    } catch (error) {
-      alert("Failed to cancel delivery. Please try again.");
-    }
-
-    setReady(true);
-  }, []);
 
   const loadLatest = useCallback(async () => {
     try {
@@ -184,6 +96,102 @@ export function DeliveryProvider({
 
     setReady(true);
   }, []);
+
+  const start = useCallback(async () => {
+    setReady(false);
+    let latitude: number;
+    let longitude: number;
+    let friendlyName: string;
+
+    try {
+      const locData = await getCurrentLocation();
+      latitude = locData.latitude;
+      longitude = locData.longitude;
+      friendlyName = locData.friendlyName;
+    } catch (error) {
+      alert("Failed to get current location. Please try again.");
+      setReady(true);
+      return;
+    }
+
+    try {
+      const data = transformDeliveryEvent(
+        await startDelivery(
+          current.data!.rideUuid!,
+          friendlyName,
+          `${latitude},${longitude}`,
+        )
+      );
+
+      if (!data.success) {
+        throw new Error(
+          data.reason || "Failed to start delivery"
+        );
+      }
+    } catch (error) {
+      alert("Failed to start delivery. Please try again.");
+    }
+
+    await load();
+  }, [current.data?.rideUuid]);
+
+  const end = useCallback(async () => {
+    setReady(false);
+    let latitude: number;
+    let longitude: number;
+    let friendlyName: string;
+
+    try {
+      const locData = await getCurrentLocation();
+      latitude = locData.latitude;
+      longitude = locData.longitude;
+      friendlyName = locData.friendlyName;
+    } catch (error) {
+      alert("Failed to get current location. Please try again.");
+      setReady(true);
+      return;
+    }
+
+    try {
+      const data = transformDeliveryEvent(
+        await endDelivery(
+          current.data!.rideUuid!,
+          friendlyName,
+          `${latitude},${longitude}`,
+        )
+      );
+
+      if (!data.success) {
+        throw new Error(
+          data.reason || "Failed to end delivery"
+        );
+      }
+    } catch (error) {
+      alert("Failed to end delivery. Please try again.");
+    }
+
+    await load();
+  }, [current.data?.rideUuid]);
+
+  const cancel = useCallback(async () => {
+    setReady(false);
+
+    try {
+      const data = transformDeliveryEvent(
+        await cancelDelivery(current.data!.rideUuid!)
+      );
+
+      if (!data.success) {
+        throw new Error(
+          data.reason || "Failed to cancel delivery"
+        );
+      }
+    } catch (error) {
+      alert("Failed to cancel delivery. Please try again.");
+    }
+
+    await load();
+  }, [current.data?.rideUuid]);
 
   useEffect(() => {
     load();

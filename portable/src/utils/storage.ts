@@ -11,6 +11,15 @@ export function getStorage<T = unknown>(key: string): T | null {
   return JSON.parse(value) as T;
 }
 
+export function checkStorage<T = unknown>(key: string): boolean {
+  const value = localStorage.getItem(key);
+
+  if (value === null)
+    return false;
+
+  return true;
+}
+
 export function clearStorage(): void {
   localStorage.clear();
 }

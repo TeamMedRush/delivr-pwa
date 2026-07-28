@@ -29,7 +29,7 @@ export function DeliveryView({
     current: { stale, data: delivery },
   } = useDelivery();
 
-  if (!ready && !delivery) {
+  if (!ready) {
     return <LoadingView />;
   }
 

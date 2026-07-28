@@ -4,7 +4,7 @@ export async function createDelivery(
   invoice: string,
 ) {
   const data = await backendApi.callApi(
-    "/deliveries/",
+    "/deliveries/events",
     "POST",
     JSON.stringify({
       "invoice_number": invoice,
@@ -20,7 +20,7 @@ export async function startDelivery(
   startLocation: string,
 ) {
   const data = await backendApi.callApi(
-    `/deliveries/${rideUuid}/start`,
+    `/deliveries/events/${rideUuid}/start`,
     "PATCH",
     JSON.stringify({
       "friendly_name": friendlyName,
@@ -37,7 +37,7 @@ export async function endDelivery(
   endLocation: string,
 ) {
   const data = await backendApi.callApi(
-    `/deliveries/${rideUuid}/end`,
+    `/deliveries/events/${rideUuid}/end`,
     "PATCH",
     JSON.stringify({
       "friendly_name": friendlyName,
@@ -52,7 +52,7 @@ export async function cancelDelivery(
   rideUuid: string,
 ) {
   const data = await backendApi.callApi(
-    `/deliveries/${rideUuid}/cancel`,
+    `/deliveries/events/${rideUuid}/cancel`,
     "PATCH",
   );
 

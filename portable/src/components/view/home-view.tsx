@@ -2,9 +2,10 @@ import { LinkButton } from "@components/ui/interactive/link-button";
 import { Container } from "@components/ui/structure/container";
 import { Image } from "@components/ui/structure/image";
 import { Heading } from "@components/ui/text/heading";
-import { Text } from "@components/ui/text/text";
 import { DeliveryView } from "@components/view/delivery-view";
+import { HistoryView } from "@components/view/history-view";
 import { DeliveryProvider } from "@contexts/delivery";
+import { HistoryProvider } from "@contexts/history";
 import { useClasses } from "@styles";
 
 export function HomeView() {
@@ -39,18 +40,22 @@ export function HomeView() {
 
       <Container className={useClasses("home-view-content")}>
         <Heading size="medium">
-          Active Deliveries
+          Pending
         </Heading>
 
-        <Text>
-          This section is work in progress.
-        </Text>
+        <HistoryProvider mode="incomplete">
+          <HistoryView embedded />
+        </HistoryProvider>
       </Container>
 
       <Container className={useClasses("home-view-content")}>
         <Heading size="medium">
-          Delivery History
+          History
         </Heading>
+
+        <HistoryProvider mode="all">
+          <HistoryView embedded />
+        </HistoryProvider>
 
         <LinkButton
           icon="ClockRegular"

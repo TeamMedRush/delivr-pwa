@@ -1,7 +1,11 @@
 import { useCallback, useContext, useEffect, useState } from "preact/hooks";
 import { ComponentChildren, createContext } from "preact";
 
-import { fetchDeliveryDetails, fetchDeliveryHistory } from "@api/delivery-history";
+import {
+  fetchDeliveryHistory,
+  fetchIncompleteDeliveries,
+} from "@api/delivery-history";
+
 import { Delivery } from "@interfaces/delivery";
 import { FastData } from "@interfaces/fast";
 import { transformDeliveryList } from "@transformers/delivery";
@@ -9,33 +13,39 @@ import { getStorage } from "@utils/storage";
 
 interface Meta {
   ready: boolean;
-  history: FastData<Delivery[]>;
+  current: FastData<Delivery[]>;
 }
 
 interface ProviderProps {
   children: ComponentChildren;
   page?: number;
+  mode?: "all" | "incomplete";
 }
 
 const Context = createContext<Meta | null>(null);
 
-export function HistoryProvider({ children }: ProviderProps) {
-  const storageKey = `fastdata::history`;
+export function HistoryProvider({
+  children,
+  mode = "all",
+}: ProviderProps) {
+  const storageKey = `fastdata::history::${mode}`;
   const [ready, setReady] = useState(false);
 
-  const [history, setHistory] = useState<FastData<Delivery[]>>({
+  const [current, setCurrent] = useState<FastData<Delivery[]>>({
     stale: true,
     data: getStorage(storageKey) || [],
   });
 
   const load = useCallback(async () => {
-    const deliveries = transformDeliveryList(
-      await fetchDeliveryHistory()
-    );
+    const api = {
+      "all": fetchDeliveryHistory,
+      "incomplete": fetchIncompleteDeliveries,
+    }
 
+    const deliveries = transformDeliveryList(await api[mode]());
     localStorage.setItem(storageKey, JSON.stringify(deliveries));
 
-    setHistory({
+    setCurrent({
       stale: false,
       data: deliveries,
     });
@@ -49,7 +59,7 @@ export function HistoryProvider({ children }: ProviderProps) {
 
   const value = {
     ready,
-    history,
+    current,
   };
 
   return <Context.Provider value={value}>
