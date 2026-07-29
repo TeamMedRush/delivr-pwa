@@ -1,5 +1,6 @@
 import { fetchLocationFriendlyName } from "@api/location";
 import { transformLocFriendlyName } from "@transformers/location";
+import { trackError } from "@utils/analytics";
 
 const MAP_PLATFORM = "https://www.google.com/maps/";
 
@@ -31,10 +32,12 @@ export function getCurrentLocation(): Promise<{
         );
 
         friendlyName = data.friendlyName;
-      } catch (error) {
+      } catch (error: Error | any) {
         console.error(
           "Error fetching location friendly name:", error
         );
+
+        trackError(error);
       }
 
       resolve({

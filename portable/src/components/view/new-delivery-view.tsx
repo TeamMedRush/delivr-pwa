@@ -8,6 +8,7 @@ import { Container } from "@components/ui/structure/container";
 import { Heading } from "@components/ui/text/heading";
 import { LoadingView } from "@components/view/loading-view";
 import { useClasses } from "@styles";
+import { trackError } from "@utils/analytics";
 
 export function NewDeliveryView() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -24,9 +25,10 @@ export function NewDeliveryView() {
       );
 
       window.location.href = `/delivery/${(data as any).ride_uuid}`;
-    } catch (error) {
-      console.error("Error creating delivery:", error);
+    } catch (error: Error | any) {
       setLoading(false);
+      console.error("Error creating delivery:", error);
+      trackError(error);
       return;
     }
   }, [invoiceNumber]);

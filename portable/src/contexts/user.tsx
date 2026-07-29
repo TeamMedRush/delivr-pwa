@@ -11,6 +11,7 @@ import {
 } from "@transformers/auth";
 
 import { transformUser } from "@transformers/user";
+import { trackError } from "@utils/analytics";
 
 interface UserMeta {
   ready: boolean;
@@ -62,13 +63,15 @@ export function UserProvider({ children }: ProviderProps) {
 
       localStorage.setItem("apiToken", data.accessToken);
       setAuthenticated(true);
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Please check your credentials and try again.",
         "error",
         "Login failed"
       );
 
+      console.error("Error during login:", error);
+      trackError(error);
       return;
     } finally {
       setAuthenticating(false);
@@ -92,12 +95,15 @@ export function UserProvider({ children }: ProviderProps) {
       }
 
       await login(phoneNumber, password);
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Please check your credentials and try again.",
         "error",
         "Registration failed"
       );
+
+      console.error("Error during registration:", error);
+      trackError(error);
     } finally {
       setAuthenticating(false);
     }
@@ -117,8 +123,10 @@ export function UserProvider({ children }: ProviderProps) {
 
       setUser(data);
       setAuthenticated(true);
-    } catch (error) {
+    } catch (error: Error | any) {
       setAuthenticated(false);
+      console.error("Error loading user profile:", error);
+      trackError(error);
     }
 
     setReady(true);

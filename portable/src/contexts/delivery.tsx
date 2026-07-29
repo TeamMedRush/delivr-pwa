@@ -21,6 +21,7 @@ import {
 } from "@transformers/delivery";
 
 import { transformDeliveryEvent } from "@transformers/delivery-actions";
+import { trackError } from "@utils/analytics";
 import { getCurrentLocation } from "@utils/location";
 import { checkStorage, getStorage } from "@utils/storage";
 
@@ -60,8 +61,10 @@ export function DeliveryProvider({
 
       const latestDelivery = deliveries[0] || null;
       localStorage.setItem(storageKey, JSON.stringify(latestDelivery));
-    } catch (error) {
+    } catch (error: Error | any) {
       localStorage.setItem(storageKey, JSON.stringify(null));
+      console.error("Error loading latest delivery:", error);
+      trackError(error);
     }
 
     setCurrent({
@@ -89,11 +92,14 @@ export function DeliveryProvider({
         stale: false,
         data: delivery,
       });
-    } catch (error) {
+    } catch (error: Error | any) {
       setCurrent({
         stale: false,
         data: null,
       });
+
+      console.error("Error loading delivery:", error);
+      trackError(error);
     }
 
     setReady(true);
@@ -110,7 +116,7 @@ export function DeliveryProvider({
       latitude = locData.latitude;
       longitude = locData.longitude;
       friendlyName = locData.friendlyName;
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Failed to get current location. Please try again.",
         "error",
@@ -118,6 +124,8 @@ export function DeliveryProvider({
       );
 
       setReady(true);
+      console.error("Error getting current location:", error);
+      trackError(error);
       return;
     }
 
@@ -135,11 +143,14 @@ export function DeliveryProvider({
           data.reason || "Failed to start delivery"
         );
       }
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Failed to start delivery. Please try again.",
         "error",
       );
+
+      console.error("Error starting delivery:", error);
+      trackError(error);
     }
 
     await load();
@@ -156,7 +167,7 @@ export function DeliveryProvider({
       latitude = locData.latitude;
       longitude = locData.longitude;
       friendlyName = locData.friendlyName;
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Failed to get current location. Please try again.",
         "error",
@@ -164,6 +175,8 @@ export function DeliveryProvider({
       );
 
       setReady(true);
+      console.error("Error getting current location:", error);
+      trackError(error);
       return;
     }
 
@@ -181,11 +194,14 @@ export function DeliveryProvider({
           data.reason || "Failed to end delivery"
         );
       }
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Failed to end delivery. Please try again.",
         "error",
       );
+
+      console.error("Error ending delivery:", error);
+      trackError(error);
     }
 
     await load();
@@ -204,11 +220,14 @@ export function DeliveryProvider({
           data.reason || "Failed to cancel delivery"
         );
       }
-    } catch (error) {
+    } catch (error: Error | any) {
       alert(
         "Failed to cancel delivery. Please try again.",
         "error",
       );
+
+      console.error("Error canceling delivery:", error);
+      trackError(error);
     }
 
     await load();
