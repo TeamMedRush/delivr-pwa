@@ -133,8 +133,11 @@ export function DeliveryProvider({
       const data = transformDeliveryEvent(
         await startDelivery(
           current.data!.rideUuid!,
-          friendlyName,
-          `${latitude},${longitude}`,
+          {
+            friendlyName,
+            latitude,
+            longitude,
+          },
         )
       );
 
@@ -184,8 +187,11 @@ export function DeliveryProvider({
       const data = transformDeliveryEvent(
         await endDelivery(
           current.data!.rideUuid!,
-          friendlyName,
-          `${latitude},${longitude}`,
+          {
+            friendlyName,
+            latitude,
+            longitude,
+          },
         )
       );
 
