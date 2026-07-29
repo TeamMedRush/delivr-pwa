@@ -46,6 +46,13 @@ export function UserProvider({ children }: ProviderProps) {
   const [authenticated, setAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
+  const logout = useCallback(async () => {
+    localStorage.clear();
+    setAuthenticating(false);
+    setAuthenticated(false);
+    setUser(null);
+  }, []);
+
   const login = useCallback(async (
     phoneNumber: string,
     password: string,
@@ -56,6 +63,17 @@ export function UserProvider({ children }: ProviderProps) {
       const data = transformUserAuthenticated(
         await authenticateUser(phoneNumber, password)
       );
+
+      if (data.forceLogout) {
+        alert(
+          "Your session expired, you have been logged out.",
+          "info",
+          "Logged out"
+        );
+
+        await logout();
+        return;
+      }
 
       if (!data.success) {
         throw new Error("Authentication failed");
@@ -107,12 +125,6 @@ export function UserProvider({ children }: ProviderProps) {
     } finally {
       setAuthenticating(false);
     }
-  }, []);
-
-  const logout = useCallback(async () => {
-    localStorage.clear();
-    setAuthenticated(false);
-    setUser(null);
   }, []);
 
   const load = useCallback(async () => {

@@ -1,4 +1,4 @@
-window.apiBaseUrl = "http://localhost:8000";
+window.apiBaseUrl = "http://localhost:8000/v1";
 window.mixpanelToken = "7ffb82a9dbc206ffa97d72c46598eb8e"
 
 window.addEventListener("pageshow", (event) => {
