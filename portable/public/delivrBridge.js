@@ -1,5 +1,3 @@
-const delivrBridgeComm = {};
-
 function generateUniqueId() {
   return Math.random().toString(36).substr(2, 9);
 }
@@ -9,7 +7,7 @@ function registerCommCallbacks(callbacks = []) {
 
   const cleanup = () => {
     for (const requestId of requestIds) {
-      delete delivrBridgeComm[requestId];
+      delete window.delivrBridgeComm[requestId];
     }
   }
 
@@ -17,8 +15,8 @@ function registerCommCallbacks(callbacks = []) {
     const requestId = generateUniqueId();
     requestIds.push(requestId);
 
-    delivrBridgeComm[requestId] = (...args) => {
-      if (!delivrBridgeComm[requestId])
+    window.delivrBridgeComm[requestId] = (...args) => {
+      if (!window.delivrBridgeComm[requestId])
         return;
 
       cleanup();
@@ -41,6 +39,7 @@ function addDelivrBridge() {
   if (!window.delivrBridge?.required())
     return;
 
+  window.delivrBridgeComm = {};
   addGeolocation();
 }
 

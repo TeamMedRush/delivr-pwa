@@ -34,6 +34,9 @@ export function DeliveryView({
   }
 
   if (!delivery) {
+    if (stale)
+      return <LoadingView />;
+
     return <ErrorView
       code={404}
       message="Delivery not found"
