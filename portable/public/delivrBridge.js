@@ -33,7 +33,7 @@ function registerCommCallbacks(callbacks = []) {
 function addGeolocation() {
   navigator.geolocation.getCurrentPosition = (success, error, options) => {
     const requestIds = registerCommCallbacks([success, error]);
-    window.delivrBridge.getCurrentPosition(requestIds[0]);
+    window.delivrBridge.getLocation(requestIds[0]);
   };
 }
 
