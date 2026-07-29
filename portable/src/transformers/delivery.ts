@@ -6,10 +6,12 @@ interface RawDelivery {
   ride_status: DeliveryStatus;
   requested_at: number | null;
   start_location: string | null;
-  start_coordinates: string | null;
+  start_latitude: number | null;
+  start_longitude: number | null;
   picked_up_at: number | null;
   end_location: string | null;
-  end_coordinates: string | null;
+  end_latitude: number | null;
+  end_longitude: number | null;
   dropped_at: number | null;
   cancelled_at: number | null;
 
@@ -47,10 +49,12 @@ function transformDelivery(raw: RawDelivery): Delivery {
     rideStatus: raw.ride_status,
     requestedAt: raw.requested_at,
     startLocation: raw.start_location,
-    startCoordinates: raw.start_coordinates,
+    startLatitude: raw.start_latitude,
+    startLongitude: raw.start_longitude,
     pickedUpAt: raw.picked_up_at,
     endLocation: raw.end_location,
-    endCoordinates: raw.end_coordinates,
+    endLatitude: raw.end_latitude,
+    endLongitude: raw.end_longitude,
     droppedAt: raw.dropped_at,
     cancelledAt: raw.cancelled_at,
     orderDetails: !raw.order_details ? null : {

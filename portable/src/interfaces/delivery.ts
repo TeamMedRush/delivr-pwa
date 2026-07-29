@@ -10,10 +10,12 @@ export interface Delivery {
   rideStatus: DeliveryStatus;
   requestedAt: number | null;
   startLocation: string | null;
-  startCoordinates: string | null;
+  startLatitude: number | null;
+  startLongitude: number | null;
   pickedUpAt: number | null;
   endLocation: string | null;
-  endCoordinates: string | null;
+  endLatitude: number | null;
+  endLongitude: number | null;
   droppedAt: number | null;
   cancelledAt: number | null;
 
@@ -42,7 +44,8 @@ export interface DeliveryEvent {
   rideUuid: string | null;
   rideStatus: DeliveryStatus;
   location: string | null;
-  coordinates: string | null;
+  latitude: number | null;
+  longitude: number | null;
   eventTime: number | null;
 }
 

@@ -2,7 +2,7 @@ import { fetchLocationFriendlyName } from "@api/location";
 import { transformLocFriendlyName } from "@transformers/location";
 import { trackError } from "@utils/analytics";
 
-const MAP_PLATFORM = "https://www.google.com/maps/";
+const MAP_PLATFORM = "https://www.google.com/maps";
 
 const GEO_OPTIONS: PositionOptions = {
   enableHighAccuracy: true,
@@ -10,13 +10,29 @@ const GEO_OPTIONS: PositionOptions = {
   maximumAge: 7000,
 };
 
-export function mapUrl(origin: string, destination: string): string {
-  return `${MAP_PLATFORM}dir/?api=1&origin=${origin}&destination=${destination}`;
+export function mapPointUrl(latitude: number, longitude: number): string {
+  return [
+    MAP_PLATFORM,
+    `/dir/?api=1`,
+    `&destination=${longitude},${latitude}`,
+    `&travelmode=driving`
+  ].join("");
+}
+
+export function mapPathUrl(origin: string, destination: string): string {
+  return [
+    MAP_PLATFORM,
+    `/dir/?api=1`,
+    `&origin=${origin}`,
+    `&destination=${destination}`,
+    `&travelmode=driving`
+  ].join("");
 }
 
 export function getCurrentLocation(): Promise<{
   latitude: number;
   longitude: number;
+  accuracy: number;
   friendlyName: string;
 }> {
   return new Promise((resolve, reject) => {
@@ -43,6 +59,7 @@ export function getCurrentLocation(): Promise<{
       resolve({
         latitude: position.coords.latitude,
         longitude: position.coords.longitude,
+        accuracy: position.coords.accuracy,
         friendlyName,
       });
     },

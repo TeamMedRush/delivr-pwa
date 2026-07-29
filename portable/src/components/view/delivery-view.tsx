@@ -12,7 +12,7 @@ import { LoadingView } from "@components/view/loading-view";
 import { ErrorView } from "@components/view/not-found-view";
 import { useDelivery } from "@contexts/delivery";
 import { useClasses } from "@styles";
-import { mapUrl } from "@utils/location";
+import { mapPathUrl, mapPointUrl } from "@utils/location";
 import { camelToTitle } from "@utils/string";
 
 interface DeliveryViewProps {
@@ -47,15 +47,18 @@ export function DeliveryView({
 
   const trip: {
     friendlyName: string | null;
-    coords: string | null;
+    latitude: number | null;
+    longitude: number | null;
   }[] = [
-    ...(!delivery.startCoordinates ? [] : [{
+    ...(!(delivery.startLatitude && delivery.startLongitude) ? [] : [{
       friendlyName: delivery.startLocation,
-      coords: delivery.startCoordinates,
+      latitude: delivery.startLatitude,
+      longitude: delivery.startLongitude,
     }]),
-    ...(!delivery.endCoordinates ? [] : [{
+    ...(!(delivery.endLatitude && delivery.endLongitude) ? [] : [{
       friendlyName: delivery.endLocation,
-      coords: delivery.endCoordinates,
+      latitude: delivery.endLatitude,
+      longitude: delivery.endLongitude,
     }]),
   ];
 
@@ -175,16 +178,16 @@ export function DeliveryView({
                   className={useClasses("delivery-view-trip-coords")}
                 >
                   <Text>
-                    Lat: {!location.coords
+                    Lat: {!location.latitude
                       ? "(Unavailable)"
-                      : location.coords!.split(",")[0]
+                      : location.latitude
                     }
                   </Text>
 
                   <Text>
-                    Lng: {!location.coords
+                    Lng: {!location.longitude
                       ? "(Unavailable)"
-                      : location.coords!.split(",")[1]
+                      : location.longitude
                     }
                   </Text>
                 </Container>
@@ -205,6 +208,12 @@ export function DeliveryView({
             <AttributeTable
               attributes={Object.keys(
                 delivery.orderDetails || {}
+              ).filter(
+                key => [
+                  !!(delivery.orderDetails as any)[key],
+                  key !== "latitude",
+                  key !== "longitude",
+                ].every(p => !!p)
               ).map(key => ({
                 name: camelToTitle(key),
                 value: (delivery.orderDetails as any)[key] || "Unavailable",
@@ -213,47 +222,64 @@ export function DeliveryView({
           </Container>
         )}
 
-        <Container className={useClasses("delivery-view-container")}>
-          <Heading
-            size="small"
-            className={useClasses("delivery-view-subheading")}
-          >
-            Actions
-          </Heading>
+        {[
+          (
+            delivery.orderDetails?.latitude &&
+            delivery.orderDetails?.longitude
+          ),
+          status === "pending",
+          status === "in_progress",
+          embedded,
+        ].some(p => !!p) && (
+          <Container className={useClasses("delivery-view-container")}>
+            <Heading
+              size="small"
+              className={useClasses("delivery-view-subheading")}
+            >
+              Actions
+            </Heading>
 
-          <Container className={useClasses("delivery-view-actions")}>
-            {trip.length >= 2 && <LinkButton
-              icon="MapRegular"
-              urlText="View on Google Maps"
-              url={mapUrl(trip[0].coords!, trip[1].coords!)}
-              title="Check Delivery Route"
-            />}
+            <Container className={useClasses("delivery-view-actions")}>
+              {(
+                delivery.orderDetails?.latitude &&
+                delivery.orderDetails?.longitude
+              ) && <LinkButton
+                icon="MapRegular"
+                title="Check Delivery Route"
+                urlText="Open in Maps"
 
-            {status === "pending" && <Button
-              title="Start Delivery"
-              icon="RocketRegular"
-              hoverText="Start"
-              disabled={stale ||  status !== "pending"}
-              onClick={start}
-            />}
+                url={mapPointUrl(
+                  delivery.orderDetails?.latitude,
+                  delivery.orderDetails?.longitude,
+                )}
+              />}
 
-            {status === "in_progress" && <Button
-              title="Complete Delivery"
-              icon="CheckCircleRegular"
-              hoverText="Complete"
-              disabled={stale || status !== "in_progress"}
-              onClick={end}
-            />}
+              {status === "pending" && <Button
+                title="Start Delivery"
+                icon="RocketRegular"
+                hoverText="Start"
+                disabled={stale ||  status !== "pending"}
+                onClick={start}
+              />}
 
-            {embedded && <LinkButton
-              icon="InfoCircleRegular"
-              title="More Details"
-              url={`/delivery/${delivery.rideUuid}`}
-              urlText="See More"
-              newTab={false}
-            />}
+              {status === "in_progress" && <Button
+                title="Complete Delivery"
+                icon="CheckCircleRegular"
+                hoverText="Complete"
+                disabled={stale || status !== "in_progress"}
+                onClick={end}
+              />}
+
+              {embedded && <LinkButton
+                icon="InfoCircleRegular"
+                title="More Details"
+                url={`/delivery/${delivery.rideUuid}`}
+                urlText="See More"
+                newTab={false}
+              />}
+            </Container>
           </Container>
-        </Container>
+        )}
       </Container>
     </Container>
   );

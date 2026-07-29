@@ -20,6 +20,7 @@ export async function startDelivery(
     friendlyName: string;
     latitude: number;
     longitude: number;
+    accuracy: number;
   }
 ) {
   const data = await backendApi.callApi(
@@ -27,9 +28,8 @@ export async function startDelivery(
     "PATCH",
     JSON.stringify({
       "friendly_name": location.friendlyName,
-      "start_latitude": location.latitude,
-      "start_longitude": location.longitude,
-      "start_location": `${location.latitude},${location.longitude}`,
+      "latitude": location.latitude,
+      "longitude": location.longitude,
     })
   );
 
@@ -42,6 +42,7 @@ export async function endDelivery(
     friendlyName: string;
     latitude: number;
     longitude: number;
+    accuracy: number;
   },
 ) {
   const data = await backendApi.callApi(
@@ -49,9 +50,8 @@ export async function endDelivery(
     "PATCH",
     JSON.stringify({
       "friendly_name": location.friendlyName,
-      "end_latitude": location.latitude,
-      "end_longitude": location.longitude,
-      "end_location": `${location.latitude},${location.longitude}`,
+      "latitude": location.latitude,
+      "longitude": location.longitude,
     })
   );
 

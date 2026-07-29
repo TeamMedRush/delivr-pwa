@@ -109,12 +109,14 @@ export function DeliveryProvider({
     setReady(false);
     let latitude: number;
     let longitude: number;
+    let accuracy: number;
     let friendlyName: string;
 
     try {
       const locData = await getCurrentLocation();
       latitude = locData.latitude;
       longitude = locData.longitude;
+      accuracy = locData.accuracy;
       friendlyName = locData.friendlyName;
     } catch (error: Error | any) {
       alert(
@@ -137,6 +139,7 @@ export function DeliveryProvider({
             friendlyName,
             latitude,
             longitude,
+            accuracy,
           },
         )
       );
@@ -163,12 +166,14 @@ export function DeliveryProvider({
     setReady(false);
     let latitude: number;
     let longitude: number;
+    let accuracy: number;
     let friendlyName: string;
 
     try {
       const locData = await getCurrentLocation();
       latitude = locData.latitude;
       longitude = locData.longitude;
+      accuracy = locData.accuracy;
       friendlyName = locData.friendlyName;
     } catch (error: Error | any) {
       alert(
@@ -191,6 +196,7 @@ export function DeliveryProvider({
             friendlyName,
             latitude,
             longitude,
+            accuracy,
           },
         )
       );
