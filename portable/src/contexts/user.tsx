@@ -3,6 +3,7 @@ import { ComponentChildren, createContext } from "preact";
 
 import { authenticateUser, createAccount } from "@api/auth";
 import { fetchProfile } from "@api/profile";
+import { usePopup } from "@contexts/popup";
 import { User } from "@interfaces/user";
 import {
   transformUserAuthenticated,
@@ -38,6 +39,7 @@ interface ProviderProps {
 const UserContext = createContext<UserMeta | null>(null);
 
 export function UserProvider({ children }: ProviderProps) {
+  const { alert } = usePopup();
   const [ready, setReady] = useState(false);
   const [authenticating, setAuthenticating] = useState(false);
   const [authenticated, setAuthenticated] = useState(false);
@@ -61,7 +63,12 @@ export function UserProvider({ children }: ProviderProps) {
       localStorage.setItem("apiToken", data.accessToken);
       setAuthenticated(true);
     } catch (error) {
-      alert("Login failed. Please check your credentials and try again.");
+      alert(
+        "Please check your credentials and try again.",
+        "error",
+        "Login failed"
+      );
+
       return;
     } finally {
       setAuthenticating(false);
@@ -86,7 +93,11 @@ export function UserProvider({ children }: ProviderProps) {
 
       await login(phoneNumber, password);
     } catch (error) {
-      alert("Account creation failed. Please check your details and try again.");
+      alert(
+        "Please check your credentials and try again.",
+        "error",
+        "Registration failed"
+      );
     } finally {
       setAuthenticating(false);
     }

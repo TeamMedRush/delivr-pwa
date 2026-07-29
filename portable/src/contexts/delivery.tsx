@@ -12,6 +12,7 @@ import {
   fetchDeliveryHistory,
 } from "@api/delivery-history";
 
+import { usePopup } from "@contexts/popup";
 import { Delivery } from "@interfaces/delivery";
 import { FastData } from "@interfaces/fast";
 import {
@@ -43,6 +44,7 @@ export function DeliveryProvider({
   ride_uuid = null,
 }: ProviderProps) {
   const storageKey = `fastdata::delivery::${ride_uuid}`;
+  const { alert } = usePopup();
   const [ready, setReady] = useState(checkStorage(storageKey));
 
   const [current, setCurrent] = useState<FastData<Delivery | null>>({
@@ -109,7 +111,12 @@ export function DeliveryProvider({
       longitude = locData.longitude;
       friendlyName = locData.friendlyName;
     } catch (error) {
-      alert("Failed to get current location. Please try again.");
+      alert(
+        "Failed to get current location. Please try again.",
+        "error",
+        "GPS Error"
+      );
+
       setReady(true);
       return;
     }
@@ -129,7 +136,10 @@ export function DeliveryProvider({
         );
       }
     } catch (error) {
-      alert("Failed to start delivery. Please try again.");
+      alert(
+        "Failed to start delivery. Please try again.",
+        "error",
+      );
     }
 
     await load();
@@ -147,7 +157,12 @@ export function DeliveryProvider({
       longitude = locData.longitude;
       friendlyName = locData.friendlyName;
     } catch (error) {
-      alert("Failed to get current location. Please try again.");
+      alert(
+        "Failed to get current location. Please try again.",
+        "error",
+        "GPS Error"
+      );
+
       setReady(true);
       return;
     }
@@ -167,7 +182,10 @@ export function DeliveryProvider({
         );
       }
     } catch (error) {
-      alert("Failed to end delivery. Please try again.");
+      alert(
+        "Failed to end delivery. Please try again.",
+        "error",
+      );
     }
 
     await load();
@@ -187,7 +205,10 @@ export function DeliveryProvider({
         );
       }
     } catch (error) {
-      alert("Failed to cancel delivery. Please try again.");
+      alert(
+        "Failed to cancel delivery. Please try again.",
+        "error",
+      );
     }
 
     await load();

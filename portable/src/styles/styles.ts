@@ -1,6 +1,7 @@
 // AUTO GENERATED FILE - DO NOT EDIT
 
 const classNames = {
+  'active': 'active',
   'attribute': 'attribute',
   'attributes': 'attributes',
   'auth-actions': 'auth-actions',
@@ -55,6 +56,7 @@ const classNames = {
   'delivery-view-trip-text': 'delivery-view-trip-text',
   'delivery-view-trips': 'delivery-view-trips',
   'embedded': 'embedded',
+  'error': 'error',
   'error-code': 'error-code',
   'error-container': 'error-container',
   'error-content': 'error-content',
@@ -81,6 +83,7 @@ const classNames = {
   'home-view-header': 'home-view-header',
   'home-view-logo': 'home-view-logo',
   'in-progress': 'in-progress',
+  'info': 'info',
   'input': 'input',
   'input-container': 'input-container',
   'large-card': 'large-card',
@@ -126,6 +129,12 @@ const classNames = {
   'node-bg-node': 'node-bg-node',
   'parallax': 'parallax',
   'pending': 'pending',
+  'popup': 'popup',
+  'popup-actions': 'popup-actions',
+  'popup-background': 'popup-background',
+  'popup-box': 'popup-box',
+  'popup-content': 'popup-content',
+  'popup-title': 'popup-title',
   'profile-page': 'profile-page',
   'profile-view': 'profile-view',
   'profile-view-content': 'profile-view-content',
@@ -140,6 +149,7 @@ const classNames = {
   'scrollpop': 'scrollpop',
   'search-bar': 'search-bar',
   'search-bar-input': 'search-bar-input',
+  'success': 'success',
   'text': 'text',
   'theme-bubble': 'theme-bubble'
 } as const;
