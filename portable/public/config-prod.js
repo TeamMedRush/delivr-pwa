@@ -1,4 +1,4 @@
-window.apiBaseUrl = "https://api.delivr.attaditya.space/v1";
+window.apiBaseUrl = "https://api.delivr.dpdns.org/v1";
 window.mixpanelToken = "7ffb82a9dbc206ffa97d72c46598eb8e"
 
 window.addEventListener("pageshow", (event) => {
