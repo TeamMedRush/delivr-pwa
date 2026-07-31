@@ -64,17 +64,6 @@ export function UserProvider({ children }: ProviderProps) {
         await authenticateUser(phoneNumber, password)
       );
 
-      if (data.forceLogout) {
-        alert(
-          "Your session expired, you have been logged out.",
-          "info",
-          "Logged out"
-        );
-
-        await logout();
-        return;
-      }
-
       if (!data.success) {
         throw new Error("Authentication failed");
       }
@@ -139,6 +128,17 @@ export function UserProvider({ children }: ProviderProps) {
       setAuthenticated(false);
       console.error("Error loading user profile:", error);
       trackError(error);
+
+      if (!location.pathname.startsWith("/auth")) {
+        await alert(
+          "Your session expired, you have been logged out.",
+          "info",
+          "Logged out"
+        );
+
+        await logout();
+        location.href = '/auth'
+      }
     }
 
     setReady(true);

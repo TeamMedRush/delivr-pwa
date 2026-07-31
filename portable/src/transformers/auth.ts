@@ -12,7 +12,6 @@ interface UserAuthenticatedRawData {
     success: boolean;
     username: string;
     access_token: string;
-    force_logout?: boolean;
   }
 }
 
@@ -32,7 +31,6 @@ export function transformUserAuthenticated(raw: unknown): UserAuthenticated {
     success: data.success,
     username: data.username,
     accessToken: data.access_token,
-    forceLogout: data.force_logout || false,
   };
 }
 

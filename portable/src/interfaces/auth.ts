@@ -7,6 +7,5 @@ export interface UserAuthenticated {
   success: boolean;
   username: string;
   accessToken: string;
-  forceLogout: boolean;
 }
 
