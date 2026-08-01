@@ -7,19 +7,11 @@ import {
   startDelivery,
 } from "@api/delivery-actions";
 
-import {
-  fetchDeliveryDetails,
-  fetchDeliveryHistory,
-} from "@api/delivery-history";
-
+import { fetchDeliveryDetails } from "@api/delivery-history";
 import { usePopup } from "@contexts/popup";
 import { Delivery } from "@interfaces/delivery";
 import { FastData } from "@interfaces/fast";
-import {
-  transformDeliveryDetails,
-  transformDeliveryList,
-} from "@transformers/delivery";
-
+import { transformDeliveryDetails } from "@transformers/delivery";
 import { transformDeliveryEvent } from "@transformers/delivery-actions";
 import { trackError } from "@utils/analytics";
 import { getCurrentLocation } from "@utils/location";
@@ -35,14 +27,14 @@ interface DeliveryMeta {
 
 interface ProviderProps {
   children: ComponentChildren;
-  ride_uuid?: string | null;
+  ride_uuid?: string;
 }
 
 const DeliveryContext = createContext<DeliveryMeta | null>(null);
 
 export function DeliveryProvider({
   children,
-  ride_uuid = null,
+  ride_uuid = "latest",
 }: ProviderProps) {
   const storageKey = `fastdata::delivery::${ride_uuid}`;
   const { alert } = usePopup();
@@ -53,33 +45,7 @@ export function DeliveryProvider({
     data: getStorage<Delivery>(storageKey) || null,
   });
 
-  const loadLatest = useCallback(async () => {
-    try {
-      const deliveries = transformDeliveryList(
-        await fetchDeliveryHistory()
-      );
-
-      const latestDelivery = deliveries[0] || null;
-      setStorage<Delivery>(storageKey, latestDelivery);
-    } catch (error: Error | any) {
-      console.error("Error loading latest delivery:", error);
-      trackError(error);
-    }
-
-    setCurrent({
-      stale: false,
-      data: getStorage<Delivery>(storageKey) || null,
-    });
-
-    setReady(true);
-  }, []);
-
   const load = useCallback(async () => {
-    if (!ride_uuid) {
-      await loadLatest();
-      return;
-    }
-
     try {
       const delivery = transformDeliveryDetails(
         await fetchDeliveryDetails(ride_uuid)
