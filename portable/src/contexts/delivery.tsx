@@ -23,7 +23,7 @@ import {
 import { transformDeliveryEvent } from "@transformers/delivery-actions";
 import { trackError } from "@utils/analytics";
 import { getCurrentLocation } from "@utils/location";
-import { checkStorage, getStorage } from "@utils/storage";
+import { checkStorage, getStorage, setStorage } from "@utils/storage";
 
 interface DeliveryMeta {
   ready: boolean;
@@ -50,7 +50,7 @@ export function DeliveryProvider({
 
   const [current, setCurrent] = useState<FastData<Delivery | null>>({
     stale: true,
-    data: getStorage(storageKey) || null,
+    data: getStorage<Delivery>(storageKey) || null,
   });
 
   const loadLatest = useCallback(async () => {
@@ -60,16 +60,15 @@ export function DeliveryProvider({
       );
 
       const latestDelivery = deliveries[0] || null;
-      localStorage.setItem(storageKey, JSON.stringify(latestDelivery));
+      setStorage<Delivery>(storageKey, latestDelivery);
     } catch (error: Error | any) {
-      localStorage.setItem(storageKey, JSON.stringify(null));
       console.error("Error loading latest delivery:", error);
       trackError(error);
     }
 
     setCurrent({
       stale: false,
-      data: getStorage(storageKey) || null,
+      data: getStorage<Delivery>(storageKey) || null,
     });
 
     setReady(true);
@@ -86,7 +85,7 @@ export function DeliveryProvider({
         await fetchDeliveryDetails(ride_uuid)
       );
 
-      localStorage.setItem(storageKey, JSON.stringify(delivery));
+      setStorage<Delivery | null>(storageKey, delivery);
 
       setCurrent({
         stale: false,

@@ -1,16 +1,24 @@
 import { User } from "@interfaces/user";
 
 interface RawData {
-  data: User
+  data: {
+    success?: boolean;
+    username?: string | null;
+    phone_number?: string | null;
+    swap_token?: string | null;
+    force_logout?: boolean | null;
+  }
 }
 
 export function transformUser(raw: unknown): User {
   const data = (raw as RawData).data;
 
   return {
-    username: data.username,
-    phone_number: data.phone_number,
-    force_logout: data.force_logout || false,
+    success: data.success || false,
+    username: data.username || null,
+    phoneNumber: data.phone_number || null,
+    swapToken: data.swap_token || null,
+    forceLogout: data.force_logout || false,
   };
 }
 

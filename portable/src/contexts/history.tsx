@@ -9,7 +9,7 @@ import {
 import { Delivery } from "@interfaces/delivery";
 import { FastData } from "@interfaces/fast";
 import { transformDeliveryList } from "@transformers/delivery";
-import { getStorage } from "@utils/storage";
+import { getStorage, setStorage } from "@utils/storage";
 
 interface Meta {
   ready: boolean;
@@ -57,7 +57,7 @@ export function HistoryProvider({
 
   const [current, setCurrent] = useState<FastData<Delivery[]>>({
     stale: true,
-    data: getStorage(storageKey) || [],
+    data: getStorage<Delivery[]>(storageKey) || [],
   });
 
   const load = useCallback(async () => {
@@ -67,7 +67,7 @@ export function HistoryProvider({
     }
 
     const deliveries = transformDeliveryList(await api[mode](limit));
-    localStorage.setItem(storageKey, JSON.stringify(deliveries));
+    setStorage<Delivery[]>(storageKey, deliveries);
 
     setCurrent({
       stale: false,

@@ -2,6 +2,7 @@ import { useCallback, useContext, useEffect, useState } from "preact/hooks";
 import { ComponentChildren, createContext } from "preact";
 
 import { authenticateUser, createAccount } from "@api/auth";
+import { ApiError } from "@api/base/api-caller";
 import { fetchProfile } from "@api/profile";
 import { usePopup } from "@contexts/popup";
 import { User } from "@interfaces/user";
@@ -12,6 +13,7 @@ import {
 
 import { transformUser } from "@transformers/user";
 import { trackError } from "@utils/analytics";
+import { checkStorage, clearStorage, setStorage } from "@utils/storage";
 
 interface UserMeta {
   ready: boolean;
@@ -47,7 +49,7 @@ export function UserProvider({ children }: ProviderProps) {
   const [user, setUser] = useState<User | null>(null);
 
   const logout = useCallback(async () => {
-    localStorage.clear();
+    clearStorage();
     setAuthenticating(false);
     setAuthenticated(false);
     setUser(null);
@@ -68,7 +70,7 @@ export function UserProvider({ children }: ProviderProps) {
         throw new Error("Authentication failed");
       }
 
-      localStorage.setItem("apiToken", data.accessToken);
+      setStorage<string>("apiToken", data.accessToken);
       setAuthenticated(true);
     } catch (error: Error | any) {
       alert(
@@ -117,6 +119,12 @@ export function UserProvider({ children }: ProviderProps) {
   }, []);
 
   const load = useCallback(async () => {
+    if (!checkStorage("apiToken")) {
+      setAuthenticated(false);
+      setAuthenticating(false);
+      setReady(true);
+    }
+
     try {
       const data = transformUser(
         await fetchProfile()
@@ -124,20 +132,26 @@ export function UserProvider({ children }: ProviderProps) {
 
       setUser(data);
       setAuthenticated(true);
-    } catch (error: Error | any) {
+    } catch (error: ApiError | any) {
       setAuthenticated(false);
       console.error("Error loading user profile:", error);
       trackError(error);
 
-      if (!location.pathname.startsWith("/auth")) {
-        await alert(
-          "Your session expired, you have been logged out.",
-          "info",
-          "Logged out"
-        );
+      if (error instanceof ApiError) {
+        const apiError: ApiError = error;
+        const data = transformUser(apiError);
 
-        await logout();
-        location.href = '/auth'
+        if (data.forceLogout) {
+          await logout();
+
+          await alert(
+            "Your session expired, you have been logged out.",
+            "info",
+            "Logged out",
+          );
+
+          location.href = "/auth"
+        }
       }
     }
 

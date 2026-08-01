@@ -48,7 +48,7 @@ export function ProfileView() {
             </Heading>
 
             <Text>
-              {user?.phone_number}
+              {user?.phoneNumber}
             </Text>
           </Container>
         </Container>

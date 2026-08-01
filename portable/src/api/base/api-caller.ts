@@ -1,5 +1,12 @@
+import { getStorage, removeStorage, setStorage } from "@utils/storage";
+
 type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH";
 const PROXY_URL = "https://proxy.attachment-aditya.workers.dev/";
+
+interface CachedData {
+  timestamp: number;
+  data: unknown;
+}
 
 interface ApiCallerConfig {
   baseApiUrl: string;
@@ -12,6 +19,10 @@ interface ApiCallerConfig {
   lsCached?: boolean;
   retries?: number;
   retryDelay?: number;
+}
+
+export class ApiError extends Error {
+  public data: unknown = null;
 }
 
 export class ApiCaller {
@@ -70,19 +81,19 @@ export class ApiCaller {
     const keyStatic = `${this.baseApiUrl}:${endpoint}`
     const keyDynamic = `${method}:${body}`;
     const lsCacheKey = `apiCache::${keyStatic}:${keyDynamic}`;
-    const lsCachedData = localStorage.getItem(lsCacheKey);
+    const lsCachedData = getStorage<CachedData>(lsCacheKey);
     let lsCached = config.lsCached || this.lsCached;
     let lsCacheTTL = config.lsCacheTTL || this.lsCacheTTL;
     let proxied = config.proxied || this.proxied;
 
     if (lsCachedData) {
-      const { timestamp, data } = JSON.parse(lsCachedData);
+      const { timestamp, data } = lsCachedData;
       const alive = lsCacheTTL
         ? (Date.now() - timestamp < lsCacheTTL)
         : true;
 
       if (!alive) {
-        localStorage.removeItem(lsCacheKey);
+        removeStorage(lsCacheKey);
       } else {
         return data;
       }
@@ -125,7 +136,13 @@ export class ApiCaller {
       }
 
       if (retries <= 0) {
-        throw new Error(`API call failed with status ${response.status}`);
+        const apiError = new ApiError(
+          `API call failed with status ${response.status}`
+        );
+
+        apiError.data = await response.json();
+
+        throw apiError;
       } else {
         await new Promise(resolve => setTimeout(resolve, this.retryDelay));
 
@@ -144,11 +161,11 @@ export class ApiCaller {
 
     const responseData = await response.json();
 
-    if (lsCached) {
-      localStorage.setItem(lsCacheKey, JSON.stringify({
+    if (lsCached && response.ok) {
+      setStorage<CachedData>(lsCacheKey, {
         timestamp: Date.now(),
         data: responseData,
-      }));
+      });
     }
 
     return responseData;

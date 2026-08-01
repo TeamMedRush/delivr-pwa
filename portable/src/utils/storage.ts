@@ -1,23 +1,28 @@
-export function setStorage<T = unknown>(key: string, value: T): void {
+export function setStorage<T>(key: string, value: T): void {
   localStorage.setItem(key, JSON.stringify(value));
 }
 
-export function getStorage<T = unknown>(key: string): T | null {
+export function getStorage<T>(key: string): T | null {
   const value = localStorage.getItem(key);
 
   if (value === null)
     return null;
 
-  return JSON.parse(value) as T;
+  try {
+    return JSON.parse(value) as T;
+  } catch {
+    localStorage.removeItem(key);
+  }
+
+  return null;
 }
 
-export function checkStorage<T = unknown>(key: string): boolean {
-  const value = localStorage.getItem(key);
+export function checkStorage(key: string): boolean {
+  return localStorage.getItem(key) !== null;
+}
 
-  if (value === null)
-    return false;
-
-  return true;
+export function removeStorage(key: string): void {
+  localStorage.removeItem(key);
 }
 
 export function clearStorage(): void {

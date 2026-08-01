@@ -1,6 +1,8 @@
 export interface User {
-  username: string;
-  phone_number: string;
-  force_logout: boolean;
+  success: boolean;
+  forceLogout: boolean;
+  username: string | null;
+  phoneNumber: string | null;
+  swapToken: string | null;
 }
 

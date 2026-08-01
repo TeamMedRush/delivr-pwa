@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "preact/hooks";
 
 import { MenuButton } from "@components/ui/interactive/menu-button";
+import { getStorage, setStorage } from "@utils/storage";
 
 function bubbleAnimation(callback: () => void) {
   const bubble = document.createElement("div");
@@ -24,7 +25,7 @@ export function ThemeButton() {
       const newTheme = prev === "light" ? "dark" : "light";
 
       bubbleAnimation(() => {
-        localStorage.setItem("theme", newTheme);
+        setStorage<string>("theme", newTheme);
         document.documentElement.classList.remove("light", "dark");
         document.documentElement.classList.add(newTheme);
       });
@@ -34,7 +35,7 @@ export function ThemeButton() {
   }, []);
 
   useEffect(() => {
-    const savedTheme = localStorage.getItem("theme") ?? (
+    const savedTheme = getStorage<string>("theme") ?? (
       window.matchMedia(
         "(prefers-color-scheme: dark)"
       ).matches ? "dark" : "light"

@@ -7,9 +7,10 @@ import { HistoryView } from "@components/view/history-view";
 import { DeliveryProvider } from "@contexts/delivery";
 import { HistoryProvider } from "@contexts/history";
 import { useClasses } from "@styles";
+import { checkStorage } from "@utils/storage";
 
 export function HomeView() {
-  if (localStorage.getItem("apiToken") === null) {
+  if (!checkStorage("apiToken")) {
     window.location.href = "/auth";
   }
 
