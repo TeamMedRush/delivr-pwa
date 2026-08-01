@@ -130,6 +130,9 @@ export function UserProvider({ children }: ProviderProps) {
         await fetchProfile()
       );
 
+      if (data.swapToken)
+        setStorage<string>("apiToken", data.swapToken);
+
       setUser(data);
       setAuthenticated(true);
     } catch (error: ApiError | any) {
