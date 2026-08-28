@@ -1,15 +1,39 @@
 <div align="center">
 
-![Pixel Aditya](https://github.com/AttAditya/attaditya.github.io/blob/main/portable/public/logo.png?raw=true)
+<img width="100px" alt="Delivr" src="./logo.png">
 
-# Portable Template
-
-Zero-Vibe template website with minimal and clean design. Built with Preact and Typescript, this template is perfect for creating a personal website or portfolio.
+# Delivr
 
 </div>
 
----
+> This repository is Powered by AttAditya's Templates and uses the `dev.sh` source system for uniform development scripts and functions with similar expected behavior and structure.
 
-> _Made with <3 by [AttAditya](https://github.com/AttAditya)_
+# Installation
 
- 
+```sh
+git clone <repository_url>
+cd <repository_name>
+
+source dev.sh
+dev setup
+```
+
+# Running
+
+```sh
+# ("source dev.sh" required only once per active shell session)
+source dev.sh
+
+# starting the project
+dev run
+```
+
+# Other Commands
+
+```sh
+# ("source dev.sh" required only once per active shell session)
+source dev.sh
+
+dev help
+```
+
