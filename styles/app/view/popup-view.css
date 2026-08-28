@@ -1,0 +1,87 @@
+.popup {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1000;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  opacity: 0;
+}
+
+.popup.error {
+  --color-focus: var(--color-failure);
+}
+
+.popup.success {
+  --color-focus: var(--color-success);
+}
+
+.popup.info {
+  --color-focus: var(--color-neutral);
+}
+
+.popup.active {
+  pointer-events: auto;
+  opacity: 1;
+}
+
+.popup-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  transition: all 0.3s ease-in-out;
+  backdrop-filter: blur(0.5rem);
+  background: color(
+    from var(--color-shade) xyz 0 0 0 / 0.5
+  );
+}
+
+.popup.active .popup-background {
+  opacity: 1;
+}
+
+.popup-box {
+  width: 90%;
+  max-width: 20rem;
+  background-color: var(--color-shine);
+  border-radius: 1rem;
+  padding: 1rem;
+  z-index: 1001;
+  scale: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  border: 0.25rem solid color(
+    from var(--color-focus) xyz x y z / 1
+  );
+}
+
+.popup.active .popup-box {
+  scale: 1;
+}
+
+.popup-title {
+  text-transform: capitalize;
+  font-size: 1.5rem;
+  font-weight: 600;
+}
+
+.popup-content {
+  font-size: 1rem;
+  color: var(--color-shade);
+}
+
+.popup-actions {
+  display: flex;
+  flex-direction: column;
+  padding-top: 1rem;
+  gap: 0.5rem;
+}
+

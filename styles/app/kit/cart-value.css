@@ -1,0 +1,33 @@
+.cart-value {
+  position: sticky;
+  bottom: 0;
+  width: 100%;
+  padding: 1rem 4rem;
+  display: flex;
+  justify-content: center;
+}
+
+.cart-value-container {
+  background-color: var(--color-shine);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem;
+  border: 0.25rem solid var(--color-focus);
+  border-radius: 1.25rem;
+}
+
+.cart-value-container:has(.cart-value-qty) {
+  flex: 1;
+}
+
+.cart-value-qty {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0 1rem;
+  flex: 1;
+  font-size: 1.5rem;
+  font-weight: bold;
+}
+

@@ -1,0 +1,33 @@
+:root {
+  --color-white: oklch(100.00% 0.0000 0.000);
+  --color-black: oklch(0.0000% 0.0000 0.000);
+  --color-success: oklch(70.000% 0.2000 120.000);
+  --color-danger: oklch(58.27% 0.23912 30.000);
+  --color-warning: oklch(80.000% 0.2000 90.000);
+
+  --font-sans: sans;
+  --font-curs: curs;
+  --font-mono: mono;
+
+  --color-shine: oklch(98.511% 0.00011 271.152);
+  --color-shade: oklch(10.0000% 0.1000 42.000);
+  --color-focus: oklch(59.987% 0.24136 293.082);
+
+  --color-neutral: oklch(66.326% 0.00008 271.152);
+  --color-warning: oklch(82.946% 0.09034 72.021);
+  --color-success: oklch(75.569% 0.08767 145.656);
+  --color-failure: oklch(61.936% 0.16924 24.621);
+
+  --color-success: oklch(81.148% 0.11611 319.106);
+  --color-warning: oklch(84.092% 0.13802 75.119);
+
+  --dark: -1;
+}
+
+:root.dark {
+  --color-shade: oklch(100.000% 0.0250 42.000);
+  --color-shine: oklch(17.304% 0.00002 271.152);
+
+  --dark: 10;
+}
+

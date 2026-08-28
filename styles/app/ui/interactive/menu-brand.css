@@ -1,0 +1,20 @@
+.menu-brand-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.menu-brand-container > * {
+  pointer-events: auto;
+}
+
+.menu-brand {
+  font-size: 1rem;
+  font-weight: 900;
+}
+
+.menu-brand-image {
+  width: 2rem;
+  height: 2rem;
+}
+
